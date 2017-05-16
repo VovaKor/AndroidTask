@@ -13,7 +13,7 @@ import android.widget.EditText;
  * Created by vova on 16.05.17.
  */
 
-public class Login extends Activity {
+public class LoginActivity extends Activity {
     private Button registerButton;
     private Button loginButton;
     private EditText emailView;

@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -44,7 +43,7 @@ public class RegisterActivity extends Activity {
                 if (!cancel) {
                     // Perform the user register attempt.
                     CredentialStorage.INSTANCE.addUser(email, password);
-                    Intent i = new Intent(getApplicationContext(), Login.class);
+                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(i);
                     finish();
                 }

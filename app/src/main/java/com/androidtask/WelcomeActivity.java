@@ -29,7 +29,7 @@ public class WelcomeActivity extends Activity {
 
             public void onClick(View v) {
 
-                Intent i = new Intent(getApplicationContext(), Login.class);
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(i);
                 finish();
             }

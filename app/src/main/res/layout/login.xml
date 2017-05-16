@@ -21,7 +21,7 @@
         </LinearLayout>
         <!-- Footer Ends -->
 
-        <!-- Login Form -->
+        <!-- LoginActivity Form -->
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
@@ -52,7 +52,7 @@
                 android:layout_marginTop="5dip"
                 android:maxLines="1"
                 android:inputType="textPassword"/>
-            <!-- Login button -->
+            <!-- LoginActivity button -->
             <Button android:id="@+id/btnLogin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                 android:textColor="@color/bg_main"/>
 
         </LinearLayout>
-        <!-- Login Form Ends -->
+        <!-- LoginActivity Form Ends -->
 
     </RelativeLayout>
 </ScrollView>
