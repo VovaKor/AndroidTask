@@ -13,9 +13,7 @@ import android.widget.EditText;
  * Created by vova on 16.05.17.
  */
 
-public class LoginActivity extends Activity {
-    private Button registerButton;
-    private Button loginButton;
+public class LoginActivity extends Activity{
     private EditText emailView;
     private EditText passwordView;
 
@@ -25,8 +23,10 @@ public class LoginActivity extends Activity {
         // setting default screen to login.xml
         setContentView(R.layout.login);
 
-         registerButton = (Button) findViewById(R.id.btnRegister);
-         loginButton = (Button) findViewById(R.id.btnLogin);
+        CredentialStorage.INSTANCE.setContext(getApplicationContext());
+
+        Button registerButton = (Button) findViewById(R.id.btnRegister);
+        Button loginButton = (Button) findViewById(R.id.btnLogin);
         emailView = (EditText) findViewById(R.id.login_email);
         passwordView = (EditText) findViewById(R.id.login_password);
 

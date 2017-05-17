@@ -23,6 +23,7 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         // Set View to register.xml
         setContentView(R.layout.register);
+        CredentialStorage.INSTANCE.setContext(getApplicationContext());
 
         submit = (Button) findViewById(R.id.btnSubmitRegister);
         emailView = (EditText) findViewById(R.id.reg_email);

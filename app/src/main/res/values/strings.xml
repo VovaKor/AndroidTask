@@ -11,7 +11,7 @@
     <string name="btn_logout">Выйти</string>
     <string name="error_invalid_email">Неверный логин</string>
     <string name="error_incorrect_password">Неверный пароль</string>
-    <string name="error_field_empty">Заполните это поле</string>
+    <string name="error_field_empty">Поле должно быть заполнено</string>
     <string name="error_short_password">Слишком короткий пароль. Минимум 4 символа</string>
     <string name="error_short_email">Слишком короткий логин. Минимум 6 символов</string>
     <string name="error_email_exist">Такой емайл уже существует</string>

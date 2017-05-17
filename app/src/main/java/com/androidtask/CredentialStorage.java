@@ -1,5 +1,8 @@
 package com.androidtask;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -15,21 +18,35 @@ import java.util.Map;
 public enum  CredentialStorage {
 
     INSTANCE {
-        private Map<String,String> storage = new HashMap<>();
+        private Context appContext;
+        private Database storage;
 
         public void addUser(String email, String password){
+            checkDatabase();
             storage.put(email,generateMD5(password));
+
         }
 
         public boolean isEmailValid(String key){
+            checkDatabase();
             return storage.containsKey(key);
         }
 
         public boolean isPasswordValid(String key, String value){
+            checkDatabase();
             String password = storage.get(key);
             return TextUtils.equals(password,generateMD5(value));
         }
 
+        public void setContext(Context applicationContext) {
+            this.appContext = applicationContext;
+        }
+
+        private void checkDatabase() {
+            if (appContext != null && storage == null) {
+                storage = new Database(appContext);
+            }
+        }
         private String generateMD5(String password) {
             MessageDigest md = null;
             try {
@@ -52,5 +69,5 @@ public enum  CredentialStorage {
     abstract void addUser(String key, String value);
     abstract boolean isEmailValid(String key);
     abstract boolean isPasswordValid(String key, String value);
-
+    abstract void setContext(Context applicationContext);
 }
