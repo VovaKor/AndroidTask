@@ -12,7 +12,7 @@ import android.widget.TextView;
  */
 
 public class WelcomeActivity extends Activity {
-    private Button logoutButton;
+    private SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,15 +20,16 @@ public class WelcomeActivity extends Activity {
         // setting default screen to welcome.xml
         setContentView(R.layout.welcome);
 
-        String emailFromLogin = getIntent().getStringExtra("email");
-        TextView textView = (TextView) findViewById(R.id.email);
-        textView.setText(emailFromLogin);
+        session = new SessionManager(getApplicationContext());
 
-        logoutButton = (Button) findViewById(R.id.btnLogout);
+        TextView textView = (TextView) findViewById(R.id.email);
+        textView.setText(session.getUserEmail());
+
+        Button logoutButton = (Button) findViewById(R.id.btnLogout);
         logoutButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-
+                session.logoutUser();
                 Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(i);
                 finish();

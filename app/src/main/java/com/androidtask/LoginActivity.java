@@ -16,11 +16,19 @@ import android.widget.EditText;
 public class LoginActivity extends Activity{
     private EditText emailView;
     private EditText passwordView;
+    private View focusView;
+    private SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setting default screen to login.xml
+        session = new SessionManager(getApplicationContext());
+
+        if (session.isLoggedIn()) {
+            // User is already logged in. Take him to Welcome activity
+            loadActivity(WelcomeActivity.class);
+        }
+
         setContentView(R.layout.login);
 
         CredentialStorage.INSTANCE.setContext(getApplicationContext());
@@ -34,9 +42,7 @@ public class LoginActivity extends Activity{
 
             public void onClick(View v) {
                 // Switching to Register screen
-                Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(i);
-                finish();
+                loadActivity(RegisterActivity.class);
             }
         });
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -50,44 +56,53 @@ public class LoginActivity extends Activity{
                 String email = emailView.getText().toString();
                 String password = passwordView.getText().toString();
 
-                boolean cancel = false;
-                View focusView = null;
+                focusView = null;
+                boolean cancel = isInputValid(email, password);
 
-                // Check for a valid email address.
-                if (TextUtils.isEmpty(email)) {
-                    emailView.setError(getString(R.string.error_field_empty));
-                    focusView = emailView;
-                    cancel = true;
-                } else if (!CredentialStorage.INSTANCE.isEmailValid(email)) {
-                    emailView.setError(getString(R.string.error_invalid_email));
-                    focusView = emailView;
-                    cancel = true;
-                }
-                // Check for a valid password.
-                if (TextUtils.isEmpty(password)) {
-                    passwordView.setError(getString(R.string.error_field_empty));
-                    focusView = passwordView;
-                    cancel = true;
-                } else if (!CredentialStorage.INSTANCE.isPasswordValid(email, password)) {
-                    passwordView.setError(getString(R.string.error_incorrect_password));
-                    focusView = passwordView;
-                    cancel = true;
-                }
                 if (cancel) {
                     // There was an error; don't attempt login and focus the first
                     // form field with an error.
                     focusView.requestFocus();
                 } else {
                     // Perform the user login attempt.
-                    Intent i = new Intent(getApplicationContext(), WelcomeActivity.class);
-                    i.putExtra("email",email);
-                    startActivity(i);
-                    finish();
+                    session.createLoginSession(email);
+                    loadActivity(WelcomeActivity.class);
                 }
 
 
 
             }
         });
+    }
+
+    private boolean isInputValid(String email, String password) {
+        boolean cancel = false;
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            emailView.setError(getString(R.string.error_field_empty));
+            focusView = emailView;
+            cancel = true;
+        } else if (!CredentialStorage.INSTANCE.isEmailValid(email)) {
+            emailView.setError(getString(R.string.error_invalid_email));
+            focusView = emailView;
+            cancel = true;
+        }
+        // Check for a valid password.
+        if (TextUtils.isEmpty(password)) {
+            passwordView.setError(getString(R.string.error_field_empty));
+            focusView = passwordView;
+            cancel = true;
+        } else if (!CredentialStorage.INSTANCE.isPasswordValid(email, password)) {
+            passwordView.setError(getString(R.string.error_incorrect_password));
+            focusView = passwordView;
+            cancel = true;
+        }
+        return cancel;
+    }
+
+    private void loadActivity(Class clazz) {
+        Intent intent = new Intent(getApplicationContext(), clazz);
+        startActivity(intent);
+        finish();
     }
 }
