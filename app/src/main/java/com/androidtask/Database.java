@@ -16,10 +16,10 @@ class Database extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "user_credentials";
-    private static final String TABLE_NAME = "credentials";
+    private final String TABLE_NAME = "credentials";
 
-    private static final String COL_EMAIL = "email";
-    private static final String COL_PASSWORD = "password";
+    private final String COL_EMAIL = "email";
+    private final String COL_PASSWORD = "password";
     private SQLiteDatabase database;
 
     Database(Context context) {

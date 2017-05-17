@@ -3,18 +3,18 @@
     <string name="hint_email">Email-адрес</string>
     <string name="hint_password">Пароль</string>
     <string name="hint_repeat_password">Повторите пароль</string>
+    <string name="welcome">Добро пожаловать</string>
     <string name="btn_login">Войти</string>
     <string name="btn_register">Регистрация</string>
     <string name="btn_to_register">Зарегистрировать</string>
-    <string name="welcome">Добро пожаловать</string>
-    <string name="welcome_label">Приветствие</string>
     <string name="btn_logout">Выйти</string>
-    <string name="error_invalid_email">Неверный логин</string>
-    <string name="error_incorrect_password">Неверный пароль</string>
     <string name="error_field_empty">Поле должно быть заполнено</string>
-    <string name="error_short_password">Слишком короткий пароль. Минимум 4 символа</string>
+    <string name="error_email_not_registered">Неверный логин</string>
+    <string name="error_email_invalid">Поле email-адрес может содержать только символ \'@\', \'.\', латинские буквы, цыфры</string>
     <string name="error_short_email">Слишком короткий логин. Минимум 6 символов</string>
-    <string name="error_email_exist">Такой емайл уже существует</string>
+    <string name="error_long_email">Слишком длинный логин. Максимум 129 символов</string>
+    <string name="error_email_exist">Такой email-адрес уже существует</string>
+    <string name="error_short_password">Слишком короткий пароль. Минимум 4 символа</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
     <string name="error_password_mismatch">Пароли не совпадают</string>
-
 </resources>

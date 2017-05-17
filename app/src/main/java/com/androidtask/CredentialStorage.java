@@ -27,7 +27,7 @@ public enum  CredentialStorage {
 
         }
 
-        public boolean isEmailValid(String key){
+        public boolean isEmailExist(String key){
             checkDatabase();
             return storage.containsKey(key);
         }
@@ -67,7 +67,7 @@ public enum  CredentialStorage {
         }
     };
     abstract void addUser(String key, String value);
-    abstract boolean isEmailValid(String key);
+    abstract boolean isEmailExist(String key);
     abstract boolean isPasswordValid(String key, String value);
     abstract void setContext(Context applicationContext);
 }

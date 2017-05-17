@@ -82,8 +82,8 @@ public class LoginActivity extends Activity{
             emailView.setError(getString(R.string.error_field_empty));
             focusView = emailView;
             cancel = true;
-        } else if (!CredentialStorage.INSTANCE.isEmailValid(email)) {
-            emailView.setError(getString(R.string.error_invalid_email));
+        } else if (!CredentialStorage.INSTANCE.isEmailExist(email)) {
+            emailView.setError(getString(R.string.error_email_not_registered));
             focusView = emailView;
             cancel = true;
         }

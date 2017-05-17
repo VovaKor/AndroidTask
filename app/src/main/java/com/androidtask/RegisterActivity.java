@@ -14,6 +14,10 @@ import android.widget.Toast;
  */
 
 public class RegisterActivity extends Activity {
+    private final int EMAIL_MIN_LENGTH = 6;
+    private final int EMAIL_MAX_LENGTH = 129;
+    private final int PASSWORD_MIN_LENGTH = 4;
+    private final String EMAIL_REGEXP = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
     private Button submit;
     private EditText emailView;
     private EditText passwordView;
@@ -63,13 +67,22 @@ public class RegisterActivity extends Activity {
                     getString(R.string.error_field_empty), Toast.LENGTH_LONG)
                     .show();
             cancel = true;
-        }else if (email.length()< 6){
+        }else if (email.length()< EMAIL_MIN_LENGTH){
             Toast.makeText(getApplicationContext(),
                     getString(R.string.error_short_email), Toast.LENGTH_LONG)
                     .show();
             cancel = true;
-        }
-        else if (CredentialStorage.INSTANCE.isEmailValid(email)) {
+        }else if (email.length()> EMAIL_MAX_LENGTH){
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.error_long_email), Toast.LENGTH_LONG)
+                    .show();
+            cancel = true;
+        }else if (!email.matches(EMAIL_REGEXP)){
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.error_email_invalid), Toast.LENGTH_LONG)
+                    .show();
+            cancel = true;
+        }else if (CredentialStorage.INSTANCE.isEmailExist(email)) {
             Toast.makeText(getApplicationContext(),
                     getString(R.string.error_email_exist), Toast.LENGTH_LONG)
                     .show();
@@ -81,7 +94,7 @@ public class RegisterActivity extends Activity {
                     getString(R.string.error_field_empty), Toast.LENGTH_LONG)
                     .show();
             cancel = true;
-        }else if (password.length()< 4){
+        }else if (password.length()< PASSWORD_MIN_LENGTH){
             Toast.makeText(getApplicationContext(),
                     getString(R.string.error_short_password), Toast.LENGTH_LONG)
                     .show();
