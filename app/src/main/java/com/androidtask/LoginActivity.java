@@ -75,6 +75,7 @@ public class LoginActivity extends Activity{
         });
     }
 
+    //TODO: extract this method to separate validation abstraction
     private boolean isInputValid(String email, String password) {
         boolean cancel = false;
         // Check for a valid email address.

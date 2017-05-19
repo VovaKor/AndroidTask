@@ -59,9 +59,11 @@ public class RegisterActivity extends Activity {
 
     }
 
+    //TODO: extract this method to separate validation abstraction
     private boolean isInputValid(String email, String password, String passwordCopy) {
         boolean cancel = false;
         // Check for a valid email address.
+        //TODO: consider the opportunity of replacing the Toast with a view error
         if (TextUtils.isEmpty(email)) {
            Toast.makeText(getApplicationContext(),
                     getString(R.string.error_field_empty), Toast.LENGTH_LONG)

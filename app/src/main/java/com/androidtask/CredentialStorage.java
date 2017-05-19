@@ -32,6 +32,7 @@ public enum  CredentialStorage {
             return storage.containsKey(key);
         }
 
+        //TODO: extract this method to separate validation abstraction
         public boolean isPasswordValid(String key, String value){
             checkDatabase();
             String password = storage.get(key);
@@ -47,6 +48,8 @@ public enum  CredentialStorage {
                 storage = new Database(appContext);
             }
         }
+
+        //TODO: extract this method to separate hash abstraction
         private String generateMD5(String password) {
             MessageDigest md = null;
             try {
