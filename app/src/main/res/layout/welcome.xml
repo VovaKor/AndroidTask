@@ -8,7 +8,7 @@
     <!-- Place footer next to header to set z-index property to minus value -->
     <LinearLayout android:id="@+id/footer"
         android:layout_width="fill_parent"
-        android:layout_height="90dip"
+        android:layout_height="@dimen/footer_layout_height"
         android:background="@drawable/repeat_bg"
         android:layout_alignParentBottom="true">
     </LinearLayout>
@@ -18,8 +18,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginStart="@dimen/form_layout_marginStart"
+        android:layout_marginEnd="@dimen/form_layout_marginEnd"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -28,24 +28,23 @@
             android:layout_height="wrap_content"
             android:text="@string/welcome"
             android:textColor="@color/bg_main"
-            android:textSize="20dp" />
+            android:textSize="@dimen/textView_textSize" />
 
         <TextView
             android:id="@+id/email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:textSize="20dp" />
+            android:layout_marginTop="@dimen/layout_marginTop"
+            android:textSize="@dimen/textView_textSize" />
 
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dip"
-            android:background="@drawable/rounded_corners"
+            android:layout_marginTop="@dimen/layout_marginTop"
             android:text="@string/btn_logout"
             android:textColor="@color/bg_main"
-            android:textSize="15dp" />
+            android:textSize="@dimen/button_textSize" />
     </LinearLayout>
 
 </RelativeLayout>

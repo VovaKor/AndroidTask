@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/bg_main</item>
         <item name="colorPrimaryDark">@color/input_register_bg</item>
         <item name="colorAccent">@color/white</item>
+        <item name="android:buttonStyle">@style/RoundedButton</item>
+
     </style>
+    <style name="RoundedButton" parent="android:style/Widget.Holo.Button">
+        <item name="android:background">@drawable/button_rounded_corners</item>
+    </style>
+
 
 </resources>

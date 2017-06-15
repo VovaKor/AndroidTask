@@ -15,7 +15,7 @@
         <!-- Place footer next to header to set z-index property to minus value -->
         <LinearLayout android:id="@+id/footer"
             android:layout_width="fill_parent"
-            android:layout_height="90dip"
+            android:layout_height="@dimen/footer_layout_height"
             android:background="@drawable/repeat_bg"
             android:layout_alignParentBottom="true">
         </LinearLayout>
@@ -27,8 +27,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:layout_marginTop="20dp">
+            android:padding="@dimen/form_padding"
+            android:layout_marginTop="@dimen/form_layout_marginTop">
             <!--  Email Label -->
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -37,8 +37,8 @@
             <EditText android:id="@+id/login_email"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"
+                android:layout_marginTop="@dimen/editText_layout_marginTop"
+                android:layout_marginBottom="@dimen/editText_layout_marginBottom"
                 android:maxLines="1"
                 android:inputType="textEmailAddress"/>
             <!--  Password Label -->
@@ -49,28 +49,26 @@
             <EditText android:id="@+id/login_password"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
+                android:layout_marginTop="@dimen/editText_layout_marginTop"
                 android:maxLines="1"
                 android:inputType="textPassword"/>
             <!-- LoginActivity button -->
             <Button android:id="@+id/btnLogin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
+                android:layout_marginTop="@dimen/button_layout_marginTop"
                 android:text="@string/btn_login"
-                android:textSize="20dip"
-                android:background="@drawable/rounded_corners"
+                android:textSize="@dimen/button_textSize"
                 android:textColor="@color/bg_main"/>
             <!-- Register button -->
             <Button android:id="@+id/btnRegister"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:layout_marginBottom="80dip"
+                android:layout_marginTop="@dimen/button_layout_marginTop"
+                android:layout_marginBottom="@dimen/button_layout_marginBottom"
                 android:text="@string/btn_register"
                 android:gravity="center"
-                android:textSize="20dip"
-                android:background="@drawable/rounded_corners"
+                android:textSize="@dimen/button_textSize"
                 android:textColor="@color/bg_main"/>
 
         </LinearLayout>
