@@ -7,10 +7,35 @@
         <item name="colorPrimaryDark">@color/input_register_bg</item>
         <item name="colorAccent">@color/white</item>
         <item name="android:buttonStyle">@style/RoundedButton</item>
+        <item name="android:textColor">?android:attr/colorPrimary</item>
+        <item name="android:colorBackground">?android:attr/colorAccent</item>
+
 
     </style>
     <style name="RoundedButton" parent="android:style/Widget.Holo.Button">
+        <item name="android:layout_marginTop">@dimen/button_layout_marginTop</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:textColor">?android:attr/colorPrimary</item>
+        <item name="android:textSize">@dimen/button_textSize</item>
         <item name="android:background">@drawable/button_rounded_corners</item>
+    </style>
+    <style name="TextField">
+        <item name="android:maxLines">1</item>
+        <item name="android:layout_marginBottom">@dimen/editText_layout_marginBottom</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/editText_layout_marginTop</item>
+
+    </style>
+    <style name="Footer">
+        <item type="id" name="footer"/>
+        <item name="android:id">@id/footer</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/footer_layout_height</item>
+        <item name="android:background">@drawable/repeat_bg</item>
+        <item name="android:layout_alignParentBottom">true</item>
+
     </style>
 
 

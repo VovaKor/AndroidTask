@@ -3,18 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fillViewport="true"
-    android:background="@color/white">
+    android:fillViewport="true">
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <!-- Footer Start -->
-        <LinearLayout android:id="@+id/footer"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/footer_layout_height"
-            android:background="@drawable/repeat_bg"
-            android:layout_alignParentBottom="true">
+        <LinearLayout style="@style/Footer">
         </LinearLayout>
         <!-- Footer Ends -->
 
@@ -29,47 +24,29 @@
             <!--  Email Label -->
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bg_main"
                 android:text="@string/hint_email"/>
             <EditText android:id="@+id/reg_email"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/editText_layout_marginTop"
-                android:layout_marginBottom="@dimen/editText_layout_marginBottom"
-                android:maxLines="1"
+                style="@style/TextField"
                 android:inputType="textEmailAddress"/>
             <!--  Password Label -->
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bg_main"
                 android:text="@string/hint_password"/>
             <EditText android:id="@+id/reg_password"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/editText_layout_marginTop"
-                android:layout_marginBottom="@dimen/editText_layout_marginBottom"
-                android:maxLines="1"
+                style="@style/TextField"
                 android:inputType="textPassword"/>
             <!-- Repeat Password Label -->
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bg_main"
                 android:text="@string/hint_repeat_password"/>
             <EditText android:id="@+id/repeat_password"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/editText_layout_marginTop"
-                android:maxLines="1"
+                style="@style/TextField"
                 android:inputType="textPassword"/>
             <!-- Register Button -->
             <Button android:id="@+id/btnSubmitRegister"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/button_layout_marginTop"
+                style="@style/RoundedButton"
                 android:text="@string/btn_to_register"
-                android:gravity="center"
-                android:textSize="@dimen/button_textSize"
-                android:textColor="@color/bg_main"/>
+                />
 
         </LinearLayout>
         <!-- Registration Form Ends -->
