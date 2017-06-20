@@ -29,8 +29,6 @@
 
     </style>
     <style name="Footer">
-        <item type="id" name="footer"/>
-        <item name="android:id">@id/footer</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/footer_layout_height</item>
         <item name="android:background">@drawable/repeat_bg</item>
