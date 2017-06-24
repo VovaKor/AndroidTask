@@ -17,4 +17,10 @@
     <string name="error_short_password">Слишком короткий пароль. Минимум 4 символа</string>
     <string name="error_incorrect_password">Неверный пароль</string>
     <string name="error_password_mismatch">Пароли не совпадают</string>
+    <string name="title_activity_admin">AdminActivity</string>
+    <string name="loading_users_error">Не удалось загрузить пользователей</string>
+    <string name="checked_users_cleared">Выделенные пользователи удалены</string>
+    <string name="user_marked_toDelete">Пользователь помечен на удаление</string>
+    <string name="user_unchecked">Пользователь снят с удаления</string>
+    <string name="save_user_error">Ошибка сохранения пользователя. Попробуйте ещё</string>
 </resources>

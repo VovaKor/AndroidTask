@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.androidtask.login.LoginActivity;
+import com.androidtask.utils.SessionManager;
+
 /**
  * Created by vova on 16.05.17.
  */
@@ -20,7 +23,7 @@ public class WelcomeActivity extends Activity {
         // setting default screen to welcome.xml
         setContentView(R.layout.welcome);
 
-        session = new SessionManager(getApplicationContext());
+        session = SessionManager.getInstance(getApplicationContext());
 
         TextView textView = (TextView) findViewById(R.id.email);
         textView.setText(session.getUserEmail());

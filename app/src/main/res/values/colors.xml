@@ -10,4 +10,6 @@
     <color name="input_register_hint">#5e6266</color>
     <color name="btn_login_bg">#cccccc</color>
 
+    <drawable name="touchFeedback">#CFD8DC</drawable>
+
 </resources>
