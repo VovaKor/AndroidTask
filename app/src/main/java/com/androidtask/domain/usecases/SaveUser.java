@@ -23,7 +23,7 @@ public class SaveUser extends UseCase<SaveUser.RequestValues, SaveUser.ResponseV
     @Override
     protected void executeUseCase(final RequestValues values) {
         User user = values.getUser();
-        mUsersRepository.saveUser(user);
+        mUsersRepository.insertUser(user);
 
         getUseCaseCallback().onSuccess(new ResponseValue(user));
     }

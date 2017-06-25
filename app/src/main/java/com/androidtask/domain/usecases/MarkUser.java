@@ -9,7 +9,7 @@ import com.androidtask.repository.UsersRepository;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Marks a task as completed.
+ * Marks a user.
  */
 public class MarkUser extends UseCase<MarkUser.RequestValues, MarkUser.ResponseValue> {
 
@@ -22,6 +22,7 @@ public class MarkUser extends UseCase<MarkUser.RequestValues, MarkUser.ResponseV
     @Override
     protected void executeUseCase(final RequestValues values) {
         User user = values.getUser();
+        user.setMMarked(true);
         mUsersRepository.markUser(user);
         getUseCaseCallback().onSuccess(new ResponseValue());
     }
@@ -31,7 +32,7 @@ public class MarkUser extends UseCase<MarkUser.RequestValues, MarkUser.ResponseV
         private final User user;
 
         public RequestValues(@NonNull User user) {
-            this.user = checkNotNull(user, "completedTask cannot be null!");
+            this.user = checkNotNull(user, "user cannot be null!");
         }
 
         public User getUser() {

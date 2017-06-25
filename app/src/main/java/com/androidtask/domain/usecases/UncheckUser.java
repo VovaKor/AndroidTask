@@ -9,7 +9,7 @@ import com.androidtask.repository.UsersRepository;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Marks a task as active (not completed yet).
+ * Removes mark from given user.
  */
 public class UncheckUser extends UseCase<UncheckUser.RequestValues, UncheckUser.ResponseValue> {
 
@@ -22,6 +22,7 @@ public class UncheckUser extends UseCase<UncheckUser.RequestValues, UncheckUser.
     @Override
     protected void executeUseCase(final RequestValues values) {
         User markedUser = values.getMarkedUser();
+        markedUser.setMMarked(false);
         mUsersRepository.uncheckUser(markedUser);
         getUseCaseCallback().onSuccess(new ResponseValue());
     }

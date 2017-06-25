@@ -241,7 +241,7 @@ public class AdminFragment extends Fragment implements AdminContract.View {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             final User user = mUsers.get(position);
-            holder.mTitleView.setText(user.getTitleForList());
+            holder.mTitleView.setText(user.generateNickname());
 
             if (user.getRole()== Roles.ADMIN) {
                 holder.mCheckBox.setVisibility(View.INVISIBLE);

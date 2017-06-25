@@ -1,7 +1,6 @@
 package com.androidtask.repository;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.androidtask.domain.models.User;
 
@@ -53,10 +52,10 @@ public class UsersRepository implements UsersDataSource {
     }
 
     @Override
-    public void saveUser(@NonNull User user) {
+    public void insertUser(@NonNull User user) {
         checkNotNull(user);
 
-        mUsersLocalDataSource.saveUser(user);
+        mUsersLocalDataSource.insertUser(user);
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedUsers == null) {

@@ -2,12 +2,9 @@ package com.androidtask.register;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import com.androidtask.UseCase;
 import com.androidtask.UseCaseHandler;
-import com.androidtask.WelcomeActivity;
-import com.androidtask.admin.AdminActivity;
 import com.androidtask.domain.models.Roles;
 import com.androidtask.domain.models.User;
 import com.androidtask.domain.usecases.GetUser;
@@ -15,7 +12,6 @@ import com.androidtask.domain.usecases.SaveUser;
 import com.androidtask.login.LoginActivity;
 import com.androidtask.utils.HashGenerator;
 import com.androidtask.utils.MD5Generator;
-import com.androidtask.utils.SessionManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,7 +43,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     public RegisterPresenter(@NonNull UseCaseHandler useCaseHandler, @NonNull RegisterActivity.ViewHolder holder,
                              @NonNull RegisterContract.View registerView, @NonNull SaveUser saveUser, @NonNull GetUser getUser) {
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
-        mSaveUser = checkNotNull(saveUser, "saveUser cannot be null!");
+        mSaveUser = checkNotNull(saveUser, "insertUser cannot be null!");
         mRegisterView = checkNotNull(registerView, "View cannot be null!");
         mGetUser = checkNotNull(getUser, "getUser cannot be null!");
         mViewHolder = checkNotNull(holder, "holder cannot be null!");

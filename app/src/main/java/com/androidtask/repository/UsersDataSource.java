@@ -30,7 +30,7 @@ public interface UsersDataSource {
         void onDataNotAvailable();
     }
 
-    void saveUser(@NonNull User user);
+    void insertUser(@NonNull User user);
 
     void getUser(@NonNull String email, @NonNull GetUserCallback callback);
 

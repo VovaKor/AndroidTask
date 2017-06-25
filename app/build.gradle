@@ -1,10 +1,11 @@
+apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "com.vova.androidtask"
+        applicationId "com.androidtask"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -19,9 +20,15 @@ android {
     }
 }
 
+greendao{
+    schemaVersion 3
+    targetGenDir 'src/main/java'
+    daoPackage 'com.androidtask.repository.local.persistence'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
+    compile 'org.greenrobot:greendao:3.2.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
