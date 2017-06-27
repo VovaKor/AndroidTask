@@ -9,12 +9,14 @@ import java.util.List;
 /**
  * Main entry point for accessing users data.
  * <p>
- * For simplicity, only getUsers() and getUser() have callbacks. Consider adding callbacks to other
+ * For simplicity, only getUsers() and loginUser() have callbacks. Consider adding callbacks to other
  * methods to inform the user of network/database errors or successful operations.
  * For example, when a new user is created, it's synchronously stored in cache but usually every
  * operation on database or network should be executed in a different thread.
  */
 public interface UsersDataSource {
+
+
 
     interface LoadUsersCallback {
 
@@ -29,6 +31,8 @@ public interface UsersDataSource {
 
         void onDataNotAvailable();
     }
+
+    void updateUser(@NonNull User user);
 
     void insertUser(@NonNull User user);
 

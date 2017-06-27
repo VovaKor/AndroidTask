@@ -42,7 +42,7 @@ public class User {
 
     private java.util.Date ban_date;
     private String ban_reason;
-    private Long id_user_details;
+    private String  id_user_details;
 
     @ToOne(joinProperty = "id_user_details")
     private UserDetails userDetails;
@@ -55,8 +55,8 @@ public class User {
     @Generated(hash = 1507654846)
     private transient UserDao myDao;
 
-    @Generated(hash = 128420079)
-    private transient Long userDetails__resolvedKey;
+    @Generated(hash = 1016781585)
+    private transient String userDetails__resolvedKey;
 
     public User(@NonNull String mEmail, @NonNull String mPassword, @NonNull Roles mRole, @NonNull boolean mMarked) {
         this.mEmail = mEmail;
@@ -66,9 +66,9 @@ public class User {
         this.nick_name = generateNickname();
     }
 
-    @Generated(hash = 1117893497)
+    @Generated(hash = 1191603949)
     public User(@NonNull String mEmail, @NonNull String mPassword, @NonNull Roles mRole, @NonNull Boolean mMarked,
-            @NonNull String nick_name, java.util.Date ban_date, String ban_reason, Long id_user_details) {
+            @NonNull String nick_name, java.util.Date ban_date, String ban_reason, String id_user_details) {
         this.mEmail = mEmail;
         this.mPassword = mPassword;
         this.mRole = mRole;
@@ -122,8 +122,7 @@ public class User {
         if (!mPassword.equals(user.mPassword)) return false;
         if (mRole != user.mRole) return false;
         if (!mMarked.equals(user.mMarked)) return false;
-        if (nick_name != null ? !nick_name.equals(user.nick_name) : user.nick_name != null)
-            return false;
+        if (!nick_name.equals(user.nick_name)) return false;
         if (ban_date != null ? !ban_date.equals(user.ban_date) : user.ban_date != null)
             return false;
         if (ban_reason != null ? !ban_reason.equals(user.ban_reason) : user.ban_reason != null)
@@ -140,7 +139,7 @@ public class User {
         result = 31 * result + mPassword.hashCode();
         result = 31 * result + mRole.hashCode();
         result = 31 * result + mMarked.hashCode();
-        result = 31 * result + (nick_name != null ? nick_name.hashCode() : 0);
+        result = 31 * result + nick_name.hashCode();
         result = 31 * result + (ban_date != null ? ban_date.hashCode() : 0);
         result = 31 * result + (ban_reason != null ? ban_reason.hashCode() : 0);
         result = 31 * result + (id_user_details != null ? id_user_details.hashCode() : 0);
@@ -204,19 +203,19 @@ public class User {
         this.ban_reason = ban_reason;
     }
 
-    public Long getId_user_details() {
+    public String getId_user_details() {
         return this.id_user_details;
     }
 
-    public void setId_user_details(Long id_user_details) {
+    public void setId_user_details(String id_user_details) {
         this.id_user_details = id_user_details;
     }
 
     /** To-one relationship, resolved on first access. */
-    @Generated(hash = 464224224)
+    @Generated(hash = 667580943)
     public UserDetails getUserDetails() {
-        Long __key = this.id_user_details;
-        if (userDetails__resolvedKey == null || !userDetails__resolvedKey.equals(__key)) {
+        String __key = this.id_user_details;
+        if (userDetails__resolvedKey == null || userDetails__resolvedKey != __key) {
             final DaoSession daoSession = this.daoSession;
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");

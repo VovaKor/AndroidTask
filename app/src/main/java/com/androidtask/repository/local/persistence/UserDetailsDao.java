@@ -15,7 +15,7 @@ import com.androidtask.domain.models.UserDetails;
 /** 
  * DAO for table "USER_DETAILS".
 */
-public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
+public class UserDetailsDao extends AbstractDao<UserDetails, String> {
 
     public static final String TABLENAME = "USER_DETAILS";
 
@@ -24,7 +24,7 @@ public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, String.class, "id", true, "ID");
         public final static Property First_name = new Property(1, String.class, "first_name", false, "FIRST_NAME");
         public final static Property Patronymic = new Property(2, String.class, "patronymic", false, "PATRONYMIC");
         public final static Property Last_name = new Property(3, String.class, "last_name", false, "LAST_NAME");
@@ -47,7 +47,7 @@ public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER_DETAILS\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: id
                 "\"FIRST_NAME\" TEXT," + // 1: first_name
                 "\"PATRONYMIC\" TEXT," + // 2: patronymic
                 "\"LAST_NAME\" TEXT," + // 3: last_name
@@ -64,9 +64,9 @@ public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
     protected final void bindValues(DatabaseStatement stmt, UserDetails entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
+        String id = entity.getId();
         if (id != null) {
-            stmt.bindLong(1, id);
+            stmt.bindString(1, id);
         }
  
         String first_name = entity.getFirst_name();
@@ -94,9 +94,9 @@ public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
     protected final void bindValues(SQLiteStatement stmt, UserDetails entity) {
         stmt.clearBindings();
  
-        Long id = entity.getId();
+        String id = entity.getId();
         if (id != null) {
-            stmt.bindLong(1, id);
+            stmt.bindString(1, id);
         }
  
         String first_name = entity.getFirst_name();
@@ -127,14 +127,14 @@ public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
     }
 
     @Override
-    public Long readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
+    public String readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
     }    
 
     @Override
     public UserDetails readEntity(Cursor cursor, int offset) {
         UserDetails entity = new UserDetails( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // first_name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // patronymic
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // last_name
@@ -145,7 +145,7 @@ public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
      
     @Override
     public void readEntity(Cursor cursor, UserDetails entity, int offset) {
-        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setFirst_name(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setPatronymic(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setLast_name(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
@@ -153,13 +153,12 @@ public class UserDetailsDao extends AbstractDao<UserDetails, Long> {
      }
     
     @Override
-    protected final Long updateKeyAfterInsert(UserDetails entity, long rowId) {
-        entity.setId(rowId);
-        return rowId;
+    protected final String updateKeyAfterInsert(UserDetails entity, long rowId) {
+        return entity.getId();
     }
     
     @Override
-    public Long getKey(UserDetails entity) {
+    public String getKey(UserDetails entity) {
         if(entity != null) {
             return entity.getId();
         } else {

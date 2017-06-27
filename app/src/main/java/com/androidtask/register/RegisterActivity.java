@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.androidtask.R;
 import com.androidtask.UseCaseHandler;
 import com.androidtask.domain.usecases.GetUser;
-import com.androidtask.domain.usecases.SaveUser;
+import com.androidtask.domain.usecases.InsertUser;
 import com.androidtask.repository.UsersRepository;
 import com.androidtask.repository.local.UsersLocalDataSource;
 
@@ -38,7 +38,7 @@ public class RegisterActivity extends Activity implements RegisterContract.View 
         Button submit = (Button) findViewById(R.id.btnSubmitRegister);
         // Create the presenter
         mPresenter = new RegisterPresenter(UseCaseHandler.getInstance(), mHolder, this,
-                new SaveUser(UsersRepository.getInstance(UsersLocalDataSource.getInstance(getApplicationContext()))),
+                new InsertUser(UsersRepository.getInstance(UsersLocalDataSource.getInstance(getApplicationContext()))),
                 new GetUser(UsersRepository.getInstance(UsersLocalDataSource.getInstance(getApplicationContext()))));
 
         submit.setOnClickListener(new View.OnClickListener() {

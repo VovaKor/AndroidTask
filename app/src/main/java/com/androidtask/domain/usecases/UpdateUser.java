@@ -2,7 +2,6 @@ package com.androidtask.domain.usecases;
 
 import android.support.annotation.NonNull;
 
-
 import com.androidtask.UseCase;
 import com.androidtask.domain.models.User;
 import com.androidtask.repository.UsersRepository;
@@ -10,20 +9,21 @@ import com.androidtask.repository.UsersRepository;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Updates or creates a new {@link User} in the {@link UsersRepository}.
+ * Created by vova on 26.06.17.
  */
-public class SaveUser extends UseCase<SaveUser.RequestValues, SaveUser.ResponseValue> {
+
+public class UpdateUser extends UseCase<UpdateUser.RequestValues, UpdateUser.ResponseValue> {
 
     private final UsersRepository mUsersRepository;
 
-    public SaveUser(@NonNull UsersRepository usersRepository) {
+    public UpdateUser(@NonNull UsersRepository usersRepository) {
         mUsersRepository = checkNotNull(usersRepository, "usersRepository cannot be null!");
     }
 
     @Override
     protected void executeUseCase(final RequestValues values) {
         User user = values.getUser();
-        mUsersRepository.insertUser(user);
+        mUsersRepository.updateUser(user);
 
         getUseCaseCallback().onSuccess(new ResponseValue(user));
     }

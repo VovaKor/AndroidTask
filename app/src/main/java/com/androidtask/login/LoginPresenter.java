@@ -6,14 +6,17 @@ import android.widget.TextView;
 
 import com.androidtask.UseCase;
 import com.androidtask.UseCaseHandler;
-import com.androidtask.WelcomeActivity;
 import com.androidtask.admin.AdminActivity;
 import com.androidtask.domain.models.Roles;
 import com.androidtask.domain.models.User;
 import com.androidtask.domain.usecases.GetUser;
+import com.androidtask.user.UserActionsActivity;
+import com.androidtask.utils.DateManager;
 import com.androidtask.utils.HashGenerator;
 import com.androidtask.utils.MD5Generator;
 import com.androidtask.utils.SessionManager;
+
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,7 +50,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         mPasswordView = password;
         mSession = session;
         mLoginView = checkNotNull(loginView, "View cannot be null!");
-        mGetUser = checkNotNull(getUser, "getUser cannot be null!");
+        mGetUser = checkNotNull(getUser, "loginUser cannot be null!");
         mGenerator = new MD5Generator();
         mLoginView.setPresenter(this);
 
@@ -55,45 +58,70 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void start() {
-        mCancel = false;
-        // Store values at the time of the login attempt.
-        mEmail = mEmailView.getText().toString();
-        mPassword = mPasswordView.getText().toString();
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(mEmail)) {
-            mLoginView.showEmptyEmailError();
-            mCancel = true;
-        } else if (TextUtils.isEmpty(mPassword)) {
-            mLoginView.showEmptyPasswordError();
-            mCancel = true;
-        }
-        if (!mCancel) {
-            getUser();
+        if (mSession.isLoggedIn()){
+
+            restartSession(mSession.getUserEmail());
+
 
         }
 
     }
 
     @Override
-    public void getUser() {
-        mUseCaseHandler.execute(mGetUser, new GetUser.RequestValues(mEmail),
+    public void loginUser(String id) {
+        mUseCaseHandler.execute(mGetUser, new GetUser.RequestValues(id),
                 new UseCase.UseCaseCallback<GetUser.ResponseValue>() {
                     @Override
                     public void onSuccess(GetUser.ResponseValue response) {
                         mUser = response.getUser();
-
                         if (!TextUtils.equals(mUser.getPassword(), mGenerator.generate(mPassword))) {
                             mLoginView.showInvalidPasswordError();
                             mCancel = true;
                         }
                         if (!mCancel){
                             // Perform the user login attempt.
-                            mSession.createLoginSession(mEmail, mUser.getRole());
-
-                            if (mUser.getRole()== Roles.ADMIN){
-                                mLoginView.showActivity(AdminActivity.class);
+                            Date date = mUser.getBan_date();
+                            if (date != null && DateManager.isDateAfterNow(date)){
+                                mLoginView.showBanUI(date.toString(), mUser.getBan_reason());
                             }else {
-                                mLoginView.showActivity(WelcomeActivity.class);
+                                mSession.createLoginSession(mEmail, mUser.getRole());
+
+                                if (mUser.getRole()== Roles.ADMIN){
+                                    mLoginView.showActivity(AdminActivity.class);
+                                }else {
+                                    mLoginView.showActivity(UserActionsActivity.class);
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        mLoginView.showInvalidEmailError();
+                        mCancel = true;
+                    }
+                });
+
+    }
+
+    @Override
+    public void restartSession(String id) {
+        mUseCaseHandler.execute(mGetUser, new GetUser.RequestValues(id),
+                new UseCase.UseCaseCallback<GetUser.ResponseValue>() {
+                    @Override
+                    public void onSuccess(GetUser.ResponseValue response) {
+                        mUser = response.getUser();
+
+                        Date date = mUser.getBan_date();
+                        if (date != null && DateManager.isDateAfterNow(date)){
+                            mLoginView.showBanUI(date.toString(), mUser.getBan_reason());
+                        }else {
+                            if (mSession.getUserRole()==Roles.ADMIN){
+                                startActivity(AdminActivity.class);
+                            }else {
+                                startActivity(UserActionsActivity.class);
                             }
                         }
                     }
@@ -109,5 +137,24 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void startActivity(Class activityClass) {
         mLoginView.showActivity(activityClass);
+    }
+
+    @Override
+    public void login() {
+        mCancel = false;
+        // Store values at the time of the login attempt.
+        mEmail = mEmailView.getText().toString();
+        mPassword = mPasswordView.getText().toString();
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(mEmail)) {
+            mLoginView.showEmptyEmailError();
+            mCancel = true;
+        } else if (TextUtils.isEmpty(mPassword)) {
+            mLoginView.showEmptyPasswordError();
+            mCancel = true;
+        }
+        if (!mCancel) {
+            loginUser(mEmail);
+            }
     }
 }

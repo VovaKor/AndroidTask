@@ -2,7 +2,6 @@ package com.androidtask.login;
 
 import com.androidtask.BasePresenter;
 import com.androidtask.BaseView;
-import com.androidtask.WelcomeActivity;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -21,12 +20,17 @@ public interface LoginContract {
 
         void showActivity(Class clazz);
 
+        void showBanUI(String id, String ban_reason);
     }
 
     interface Presenter extends BasePresenter {
 
-        void getUser();
+        void loginUser(String id);
+
+        void restartSession(String id);
 
         void startActivity(Class activityClass);
+
+        void login();
     }
 }

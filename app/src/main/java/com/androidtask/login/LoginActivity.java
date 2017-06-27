@@ -1,22 +1,25 @@
 package com.androidtask.login;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.androidtask.R;
 import com.androidtask.register.RegisterActivity;
 import com.androidtask.UseCaseHandler;
-import com.androidtask.domain.models.Roles;
 import com.androidtask.domain.usecases.GetUser;
 import com.androidtask.repository.UsersRepository;
 import com.androidtask.repository.local.UsersLocalDataSource;
 import com.androidtask.utils.SessionManager;
-import com.androidtask.WelcomeActivity;
-import com.androidtask.admin.AdminActivity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,18 +28,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Created by vova on 16.05.17.
  */
 
-public class LoginActivity extends Activity implements LoginContract.View{
+public class LoginActivity extends AppCompatActivity implements LoginContract.View{
     private EditText emailView;
     private EditText passwordView;
     private View focusView;
-    private SessionManager session;
     private LoginContract.Presenter mPresenter;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        session = SessionManager.getInstance(getApplicationContext());
+
         setContentView(R.layout.login);
 
         emailView = (EditText) findViewById(R.id.login_email);
@@ -47,16 +49,10 @@ public class LoginActivity extends Activity implements LoginContract.View{
                 emailView,
                 passwordView,
                 this,
-                session,
+                SessionManager.getInstance(getApplicationContext()),
                 new GetUser(UsersRepository.getInstance(UsersLocalDataSource.getInstance(getApplicationContext()))));
 
-        if (session.isLoggedIn()){
-            if (session.getUserRole()==Roles.ADMIN){
-            mPresenter.startActivity(AdminActivity.class);
-            }else {
-            mPresenter.startActivity(WelcomeActivity.class);
-            }
-        }
+        mPresenter.start();
 
         Button registerButton = (Button) findViewById(R.id.btnRegister);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +71,7 @@ public class LoginActivity extends Activity implements LoginContract.View{
                 passwordView.setError(null);
 
                 focusView = null;
-                mPresenter.start();
+                mPresenter.login();
             }
         });
     }
@@ -83,6 +79,14 @@ public class LoginActivity extends Activity implements LoginContract.View{
     public void showActivity(Class clazz) {
         Intent intent = new Intent(getApplicationContext(), clazz);
         startActivity(intent);
+
+    }
+
+    @Override
+    public void showBanUI(String banTime, String banReason) {
+
+        UserBannedDialog newFragment = UserBannedDialog.newInstance(banTime, banReason);
+        newFragment.show(getSupportFragmentManager(), "dialog");
 
     }
 

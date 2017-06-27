@@ -15,12 +15,15 @@
         </activity>
         <!-- Entry for RegisterActivity.class -->
         <activity android:name=".register.RegisterActivity" />
-        <!-- Entry for WelcomeActivity.class -->
-        <activity android:name=".WelcomeActivity" />
 
-        <activity
-            android:name=".admin.AdminActivity"
-            />
+        <activity android:name=".admin.AdminActivity" />
+        <activity android:name=".admin.actions.AdminActionsActivity" />
+        <activity android:name=".admin.actions.data.AdminUserDataActivity" />
+        <activity android:name=".admin.actions.ban.AdminBanActivity" />
+
+        <activity android:name=".user.UserActionsActivity" />
+        <activity android:name=".user.data.UserDataActivity" />
+
     </application>
 
 </manifest>

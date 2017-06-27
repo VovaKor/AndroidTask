@@ -3,15 +3,20 @@ package com.androidtask.repository.local;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.androidtask.domain.models.Roles;
 import com.androidtask.domain.models.User;
+import com.androidtask.domain.models.UserDetails;
 import com.androidtask.repository.UsersDataSource;
 import com.androidtask.repository.local.persistence.DaoMaster;
 import com.androidtask.repository.local.persistence.DaoSession;
 import com.androidtask.repository.local.persistence.UserDao;
+import com.androidtask.utils.HashGenerator;
+import com.androidtask.utils.MD5Generator;
 
 import org.greenrobot.greendao.database.Database;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,6 +34,7 @@ public class UsersLocalDataSource implements UsersDataSource {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, DATABASE_NAME);
         Database db = helper.getWritableDb();
         mDaoSession = new DaoMaster(db).newSession();
+        bootstrapDB();
     }
 
     public static UsersLocalDataSource getInstance(@NonNull Context context) {
@@ -36,6 +42,13 @@ public class UsersLocalDataSource implements UsersDataSource {
             INSTANCE = new UsersLocalDataSource(context);
         }
         return INSTANCE;
+    }
+
+    @Override
+    public void updateUser(@NonNull User user) {
+        checkNotNull(user);
+        UserDao userDao = mDaoSession.getUserDao();
+        userDao.update(user);
     }
 
     @Override
@@ -64,7 +77,10 @@ public class UsersLocalDataSource implements UsersDataSource {
     public void getUsers(@NonNull LoadUsersCallback callback) {
 
         UserDao userDao = mDaoSession.getUserDao();
-        List<User> users = userDao.loadAll();
+        List<User> users = userDao.queryBuilder()
+                .where(UserDao.Properties.MRole.eq("USER"))
+                .build()
+                .list();
 
         if (users.isEmpty()) {
             // This will be called if the table is new or just empty.
@@ -103,4 +119,20 @@ public class UsersLocalDataSource implements UsersDataSource {
         // users from all the available data sources.
     }
 
+    private void bootstrapDB() {
+        HashGenerator generator = new MD5Generator();
+        mDaoSession.deleteAll(User.class);
+        UserDao userDao = mDaoSession.getUserDao();
+        UserDetails userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя", "Василиевич", "Пупкин", "(000)555-55-55");
+        User user = new User("admin@admin.com", generator.generate("admin"), Roles.ADMIN, false);
+        user.setUserDetails(userDetails);
+        userDao.insert(user);
+
+        for (int i = 0; i<100;i++) {
+            userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя "+i, "Василиевич "+i, "Пупкин "+i, "(000)"+i+"-55-55");
+            user = new User("user"+i+"@admin.com", generator.generate("user"+i), Roles.USER, false);
+            user.setUserDetails(userDetails);
+            userDao.insert(user);
+        }
+    }
 }

@@ -38,7 +38,7 @@ public class AdminPresenter implements AdminContract.Presenter {
                           @NonNull DeleteUsers deleteUsers) {
         mUseCaseHandler = checkNotNull(useCaseHandler, "usecaseHandler cannot be null");
         mAdminFragment = checkNotNull(adminView, "tasksView cannot be null!");
-        mGetUsers = checkNotNull(getUsers, "getUser cannot be null!");
+        mGetUsers = checkNotNull(getUsers, "loginUser cannot be null!");
         mMarkUser = checkNotNull(markUser, "markUser cannot be null!");
         mUncheckUser = checkNotNull(uncheckUser, "uncheckUser cannot be null!");
         mDeleteUsers = checkNotNull(deleteUsers,
@@ -165,6 +165,12 @@ public class AdminPresenter implements AdminContract.Presenter {
                         mAdminFragment.showLoadingUsersError();
                     }
                 });
+    }
+
+    @Override
+    public void openActionsDialog(User user) {
+        checkNotNull(user,"user cannot be null");
+        mAdminFragment.showAdminActionsUI(user.getId());
     }
 
 }

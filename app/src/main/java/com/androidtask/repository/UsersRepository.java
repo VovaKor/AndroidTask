@@ -52,6 +52,19 @@ public class UsersRepository implements UsersDataSource {
     }
 
     @Override
+    public void updateUser(@NonNull User user) {
+        checkNotNull(user);
+
+        mUsersLocalDataSource.updateUser(user);
+
+        // Do in memory cache update to keep the app UI up to date
+        if (mCachedUsers == null) {
+            mCachedUsers = new LinkedHashMap<>();
+        }
+        mCachedUsers.put(user.getId(), user);
+    }
+
+    @Override
     public void insertUser(@NonNull User user) {
         checkNotNull(user);
 

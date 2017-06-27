@@ -19,8 +19,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.androidtask.R;
-import com.androidtask.domain.models.Roles;
 import com.androidtask.domain.models.User;
+import com.androidtask.admin.actions.AdminActionsActivity;
 import com.androidtask.utils.ScrollChildSwipeRefreshLayout;
 
 import java.util.ArrayList;
@@ -147,6 +147,11 @@ public class AdminFragment extends Fragment implements AdminContract.View {
         public void onUncheckUserClick(User uncheckedUser) {
             mPresenter.uncheckUser(uncheckedUser);
         }
+
+        @Override
+        public void onUserNicknameClick(User user) {
+            mPresenter.openActionsDialog(user);
+        }
     };
 
     @Override
@@ -204,6 +209,15 @@ public class AdminFragment extends Fragment implements AdminContract.View {
         showMessage(getString(R.string.user_unchecked));
     }
 
+    @Override
+    public void showAdminActionsUI(String id) {
+        // in it's own Activity, since it makes more sense that way and it gives us the flexibility
+        // to show some Intent stubbing.
+        Intent intent = new Intent(getContext(), AdminActionsActivity.class);
+        intent.putExtra(getString(R.string.EXTRA_USER_ID), id);
+        startActivity(intent);
+    }
+
     private static class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
         private List<User> mUsers;
@@ -241,13 +255,8 @@ public class AdminFragment extends Fragment implements AdminContract.View {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             final User user = mUsers.get(position);
-            holder.mTitleView.setText(user.generateNickname());
 
-            if (user.getRole()== Roles.ADMIN) {
-                holder.mCheckBox.setVisibility(View.INVISIBLE);
-            }
-            else {
-                // user UI
+                holder.mTitleView.setText(user.getNick_name());
                 holder.mCheckBox.setChecked(user.isMarked());
                 if (user.isMarked()) {
                     holder.itemView.setBackgroundDrawable(holder.itemView.getContext()
@@ -256,6 +265,13 @@ public class AdminFragment extends Fragment implements AdminContract.View {
                     holder.itemView.setBackgroundDrawable(holder.itemView.getContext()
                             .getResources().getDrawable(R.drawable.touch_feedback));
                 }
+
+                holder.mTitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mItemListener.onUserNicknameClick(user);
+                    }
+                });
 
                 holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -267,7 +283,7 @@ public class AdminFragment extends Fragment implements AdminContract.View {
                         }
                     }
                 });
-            }
+
 
         }
 
@@ -297,6 +313,8 @@ public class AdminFragment extends Fragment implements AdminContract.View {
         void onMarkUserClick(User markedUser);
 
         void onUncheckUserClick(User activatedUser);
+
+        void onUserNicknameClick(User user);
     }
 
 }

@@ -8,7 +8,7 @@ import com.androidtask.UseCaseHandler;
 import com.androidtask.domain.models.Roles;
 import com.androidtask.domain.models.User;
 import com.androidtask.domain.usecases.GetUser;
-import com.androidtask.domain.usecases.SaveUser;
+import com.androidtask.domain.usecases.InsertUser;
 import com.androidtask.login.LoginActivity;
 import com.androidtask.utils.HashGenerator;
 import com.androidtask.utils.MD5Generator;
@@ -28,7 +28,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     private final String EMAIL_REGEXP = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
     private final GetUser mGetUser;
-    private SaveUser mSaveUser;
+    private InsertUser mInsertUser;
     private final UseCaseHandler mUseCaseHandler;
     private String mPassword;
     private String mEmail;
@@ -41,11 +41,11 @@ public class RegisterPresenter implements RegisterContract.Presenter {
      *
      */
     public RegisterPresenter(@NonNull UseCaseHandler useCaseHandler, @NonNull RegisterActivity.ViewHolder holder,
-                             @NonNull RegisterContract.View registerView, @NonNull SaveUser saveUser, @NonNull GetUser getUser) {
+                             @NonNull RegisterContract.View registerView, @NonNull InsertUser insertUser, @NonNull GetUser getUser) {
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
-        mSaveUser = checkNotNull(saveUser, "insertUser cannot be null!");
+        mInsertUser = checkNotNull(insertUser, "insertUser cannot be null!");
         mRegisterView = checkNotNull(registerView, "View cannot be null!");
-        mGetUser = checkNotNull(getUser, "getUser cannot be null!");
+        mGetUser = checkNotNull(getUser, "loginUser cannot be null!");
         mViewHolder = checkNotNull(holder, "holder cannot be null!");
         mGenerator = new MD5Generator();
         mRegisterView.setPresenter(this);
@@ -111,10 +111,10 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     @Override
     public void saveUser() {
         User user = new User(mEmail,mGenerator.generate(mPassword),Roles.USER,false);
-        mUseCaseHandler.execute(mSaveUser, new SaveUser.RequestValues(user),
-                new UseCase.UseCaseCallback<SaveUser.ResponseValue>() {
+        mUseCaseHandler.execute(mInsertUser, new InsertUser.RequestValues(user),
+                new UseCase.UseCaseCallback<InsertUser.ResponseValue>() {
                     @Override
-                    public void onSuccess(SaveUser.ResponseValue response) {
+                    public void onSuccess(InsertUser.ResponseValue response) {
                         startActivity(LoginActivity.class);
                     }
 
