@@ -24,4 +24,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="admin_footer_marginTop">400dp</dimen>
+    <dimen name="thumbnail_width">150dp</dimen>
+    <dimen name="thumbnail_height">150dp</dimen>
+    <dimen name="thumbnail_margin">5dp</dimen>
 </resources>

@@ -21,6 +21,20 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/form_padding"
             android:layout_marginTop="@dimen/form_layout_marginTop">
+            <ImageView
+                android:id="@+id/picture"
+                android:layout_width="@dimen/thumbnail_width"
+                android:layout_height="@dimen/thumbnail_height"
+                android:contentDescription="@string/picture"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/thumbnail_margin"
+                android:background="@drawable/pic_border" />
+            <Button
+                android:id="@+id/capture_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/capture" />
             <!--  Email Label -->
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

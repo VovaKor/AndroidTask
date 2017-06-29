@@ -1,5 +1,8 @@
 package com.androidtask.admin;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.androidtask.UseCase;
@@ -11,8 +14,11 @@ import com.androidtask.domain.usecases.MarkUser;
 import com.androidtask.domain.usecases.UncheckUser;
 import com.androidtask.repository.UsersDataSource;
 
+import java.io.File;
 import java.util.List;
 
+import static com.androidtask.user.data.UserDataPresenter.CORRECTION;
+import static com.androidtask.user.data.UserDataPresenter.SLASH;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -20,8 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * UI as required.
  */
 public class AdminPresenter implements AdminContract.Presenter {
-
-
+    private static final int THUMBNAIL_WIDTH = 60;
+    private static final int THUMBNAIL_HEIGHT = 60;
     private final AdminContract.View mAdminFragment;
     private final GetUsers mGetUsers;
     private final MarkUser mMarkUser;
@@ -171,6 +177,39 @@ public class AdminPresenter implements AdminContract.Presenter {
     public void openActionsDialog(User user) {
         checkNotNull(user,"user cannot be null");
         mAdminFragment.showAdminActionsUI(user.getId());
+    }
+
+    @Override
+    public Bitmap createImageBitmap(String thumbnail, float density) {
+        String currentPhotoPath = getStorageDirectory().getAbsolutePath()+SLASH+thumbnail;
+        // Get the dimensions of the View
+        int targetW = (int) (THUMBNAIL_WIDTH * density + CORRECTION);
+        int targetH = (int) (THUMBNAIL_HEIGHT * density + CORRECTION);
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+
+        return bitmap;
+    }
+    private File getStorageDirectory() {
+        return   Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
     }
 
 }

@@ -29,6 +29,7 @@ public class UserDetailsDao extends AbstractDao<UserDetails, String> {
         public final static Property Patronymic = new Property(2, String.class, "patronymic", false, "PATRONYMIC");
         public final static Property Last_name = new Property(3, String.class, "last_name", false, "LAST_NAME");
         public final static Property Phone = new Property(4, String.class, "phone", false, "PHONE");
+        public final static Property City = new Property(5, String.class, "city", false, "CITY");
     }
 
     private DaoSession daoSession;
@@ -51,7 +52,8 @@ public class UserDetailsDao extends AbstractDao<UserDetails, String> {
                 "\"FIRST_NAME\" TEXT," + // 1: first_name
                 "\"PATRONYMIC\" TEXT," + // 2: patronymic
                 "\"LAST_NAME\" TEXT," + // 3: last_name
-                "\"PHONE\" TEXT);"); // 4: phone
+                "\"PHONE\" TEXT," + // 4: phone
+                "\"CITY\" TEXT);"); // 5: city
     }
 
     /** Drops the underlying database table. */
@@ -88,6 +90,11 @@ public class UserDetailsDao extends AbstractDao<UserDetails, String> {
         if (phone != null) {
             stmt.bindString(5, phone);
         }
+ 
+        String city = entity.getCity();
+        if (city != null) {
+            stmt.bindString(6, city);
+        }
     }
 
     @Override
@@ -118,6 +125,11 @@ public class UserDetailsDao extends AbstractDao<UserDetails, String> {
         if (phone != null) {
             stmt.bindString(5, phone);
         }
+ 
+        String city = entity.getCity();
+        if (city != null) {
+            stmt.bindString(6, city);
+        }
     }
 
     @Override
@@ -138,7 +150,8 @@ public class UserDetailsDao extends AbstractDao<UserDetails, String> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // first_name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // patronymic
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // last_name
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // phone
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // phone
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // city
         );
         return entity;
     }
@@ -150,6 +163,7 @@ public class UserDetailsDao extends AbstractDao<UserDetails, String> {
         entity.setPatronymic(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setLast_name(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setPhone(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setCity(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     @Override

@@ -37,7 +37,8 @@ public class UserDao extends AbstractDao<User, String> {
         public final static Property Nick_name = new Property(4, String.class, "nick_name", false, "NICK_NAME");
         public final static Property Ban_date = new Property(5, java.util.Date.class, "ban_date", false, "BAN_DATE");
         public final static Property Ban_reason = new Property(6, String.class, "ban_reason", false, "BAN_REASON");
-        public final static Property Id_user_details = new Property(7, String.class, "id_user_details", false, "ID_USER_DETAILS");
+        public final static Property Thumbnail = new Property(7, String.class, "thumbnail", false, "THUMBNAIL");
+        public final static Property Id_user_details = new Property(8, String.class, "id_user_details", false, "ID_USER_DETAILS");
     }
 
     private DaoSession daoSession;
@@ -64,7 +65,8 @@ public class UserDao extends AbstractDao<User, String> {
                 "\"NICK_NAME\" TEXT NOT NULL ," + // 4: nick_name
                 "\"BAN_DATE\" INTEGER," + // 5: ban_date
                 "\"BAN_REASON\" TEXT," + // 6: ban_reason
-                "\"ID_USER_DETAILS\" TEXT);"); // 7: id_user_details
+                "\"THUMBNAIL\" TEXT," + // 7: thumbnail
+                "\"ID_USER_DETAILS\" TEXT);"); // 8: id_user_details
     }
 
     /** Drops the underlying database table. */
@@ -92,9 +94,14 @@ public class UserDao extends AbstractDao<User, String> {
             stmt.bindString(7, ban_reason);
         }
  
+        String thumbnail = entity.getThumbnail();
+        if (thumbnail != null) {
+            stmt.bindString(8, thumbnail);
+        }
+ 
         String id_user_details = entity.getId_user_details();
         if (id_user_details != null) {
-            stmt.bindString(8, id_user_details);
+            stmt.bindString(9, id_user_details);
         }
     }
 
@@ -117,9 +124,14 @@ public class UserDao extends AbstractDao<User, String> {
             stmt.bindString(7, ban_reason);
         }
  
+        String thumbnail = entity.getThumbnail();
+        if (thumbnail != null) {
+            stmt.bindString(8, thumbnail);
+        }
+ 
         String id_user_details = entity.getId_user_details();
         if (id_user_details != null) {
-            stmt.bindString(8, id_user_details);
+            stmt.bindString(9, id_user_details);
         }
     }
 
@@ -144,7 +156,8 @@ public class UserDao extends AbstractDao<User, String> {
             cursor.getString(offset + 4), // nick_name
             cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // ban_date
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // ban_reason
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // id_user_details
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // thumbnail
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // id_user_details
         );
         return entity;
     }
@@ -158,7 +171,8 @@ public class UserDao extends AbstractDao<User, String> {
         entity.setNick_name(cursor.getString(offset + 4));
         entity.setBan_date(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
         entity.setBan_reason(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setId_user_details(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setThumbnail(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setId_user_details(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override

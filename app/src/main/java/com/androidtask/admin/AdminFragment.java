@@ -2,6 +2,7 @@
 package com.androidtask.admin;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidtask.R;
@@ -32,6 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Display a grid of {@link User}s.
  */
 public class AdminFragment extends Fragment implements AdminContract.View {
+
 
     private AdminContract.Presenter mPresenter;
 
@@ -56,6 +59,7 @@ public class AdminFragment extends Fragment implements AdminContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mListAdapter = new UsersAdapter(new ArrayList<User>(0), mItemListener);
+
     }
 
     @Override
@@ -218,7 +222,7 @@ public class AdminFragment extends Fragment implements AdminContract.View {
         startActivity(intent);
     }
 
-    private static class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
+    private class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
         private List<User> mUsers;
         private UserItemListener mItemListener;
@@ -255,6 +259,12 @@ public class AdminFragment extends Fragment implements AdminContract.View {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             final User user = mUsers.get(position);
+                if (user.getThumbnail()!=null){
+                    Bitmap bitmap = mPresenter.createImageBitmap(user.getThumbnail(), getResources().getDisplayMetrics().density);
+                    holder.mImageView.setImageBitmap(bitmap);
+                }else {
+                    holder.mImageView.setImageBitmap(null);
+                }
 
                 holder.mTitleView.setText(user.getNick_name());
                 holder.mCheckBox.setChecked(user.isMarked());
@@ -295,8 +305,9 @@ public class AdminFragment extends Fragment implements AdminContract.View {
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
         // you provide access to all the views for a data item in a view holder
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder {
 
+            public ImageView mImageView;
             public TextView mTitleView;
             public CheckBox mCheckBox;
 
@@ -304,6 +315,7 @@ public class AdminFragment extends Fragment implements AdminContract.View {
                 super(v);
                 mTitleView = (TextView) v.findViewById(R.id.user_item_title);
                 mCheckBox = (CheckBox) v.findViewById(R.id.user_checkBox);
+                mImageView = (ImageView) v.findViewById(R.id.user_item_thumbnail);
             }
         }
     }

@@ -47,4 +47,8 @@
     <string name="user_banned_time">Вы забанены до</string>
     <string name="user_banned_reason">По причине</string>
     <string name="user_ban_dialog_title">Важно!</string>
+    <string name="capture">Создать аватарку</string>
+    <string name="picture">Аватарка</string>
+    <string name="user_city">Город</string>
+    <string name="pick_place">Определить город</string>
 </resources>

@@ -20,20 +20,22 @@ public class UserDetails {
     private String patronymic;
     private String last_name;
     private String phone;
+    private String city;
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
     /** Used for active entity operations. */
     @Generated(hash = 1181202576)
     private transient UserDetailsDao myDao;
-    @Generated(hash = 1914687025)
+    @Generated(hash = 1652882252)
     public UserDetails(String id, String first_name, String patronymic, String last_name,
-            String phone) {
+            String phone, String city) {
         this.id = id;
         this.first_name = first_name;
         this.patronymic = patronymic;
         this.last_name = last_name;
         this.phone = phone;
+        this.city = city;
     }
     @Generated(hash = 64089743)
     public UserDetails() {
@@ -107,32 +109,11 @@ public class UserDetails {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getUserDetailsDao() : null;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserDetails that = (UserDetails) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (first_name != null ? !first_name.equals(that.first_name) : that.first_name != null)
-            return false;
-        if (patronymic != null ? !patronymic.equals(that.patronymic) : that.patronymic != null)
-            return false;
-        if (last_name != null ? !last_name.equals(that.last_name) : that.last_name != null)
-            return false;
-        return phone != null ? phone.equals(that.phone) : that.phone == null;
-
+    public String getCity() {
+        return this.city;
+    }
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (first_name != null ? first_name.hashCode() : 0);
-        result = 31 * result + (patronymic != null ? patronymic.hashCode() : 0);
-        result = 31 * result + (last_name != null ? last_name.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        return result;
-    }
 }

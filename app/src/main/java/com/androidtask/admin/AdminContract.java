@@ -1,6 +1,8 @@
 package com.androidtask.admin;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.widget.ImageView;
 
 import com.androidtask.BasePresenter;
 import com.androidtask.BaseView;
@@ -45,5 +47,7 @@ public interface AdminContract {
         void deleteCheckedUsers();
 
         void openActionsDialog(User user);
+
+        Bitmap createImageBitmap(String thumbnail, float density);
     }
 }

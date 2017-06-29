@@ -1,8 +1,13 @@
 package com.androidtask.user.data;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
 import com.androidtask.BasePresenter;
 import com.androidtask.BaseView;
 import com.androidtask.domain.models.User;
+
+import java.io.File;
 
 /**
  * Created by vova on 25.06.17.
@@ -10,6 +15,8 @@ import com.androidtask.domain.models.User;
 
 public interface UserDataContract {
     interface View extends BaseView<Presenter> {
+
+        void showImageBitmap(Bitmap bitmap);
 
         void showUserDetails(User user);
 
@@ -23,5 +30,14 @@ public interface UserDataContract {
         void updateUser();
 
         void cancel();
+
+        File createImageFile();
+
+        void addPictureToGallery();
+
+        Bitmap createImageBitmap(ImageView mImageView);
+
+        Bitmap getThumbnail(String thumbnail, float density);
+
     }
 }

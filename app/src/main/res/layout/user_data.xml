@@ -29,7 +29,20 @@
             android:text="@string/user_data_title"
             android:textSize="@dimen/textView_textSize"
             android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="@dimen/thumbnail_width"
+            android:layout_height="@dimen/thumbnail_height"
+            android:contentDescription="@string/picture"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/thumbnail_margin"
+            android:background="@drawable/pic_border" />
+        <Button
+            android:id="@+id/btnCreateThumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/capture" />
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -54,6 +67,18 @@
             android:text="@string/last_name"/>
         <EditText android:id="@+id/last_name_edit"
             style="@style/TextField"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/user_city"/>
+        <EditText android:id="@+id/user_city_edit"
+            style="@style/TextField"/>
+        <Button
+            android:id="@+id/btnPickPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/pick_place" />
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

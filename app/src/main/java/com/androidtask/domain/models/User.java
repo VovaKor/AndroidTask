@@ -42,6 +42,7 @@ public class User {
 
     private java.util.Date ban_date;
     private String ban_reason;
+    private String thumbnail;
     private String  id_user_details;
 
     @ToOne(joinProperty = "id_user_details")
@@ -66,9 +67,10 @@ public class User {
         this.nick_name = generateNickname();
     }
 
-    @Generated(hash = 1191603949)
+    @Generated(hash = 1403334529)
     public User(@NonNull String mEmail, @NonNull String mPassword, @NonNull Roles mRole, @NonNull Boolean mMarked,
-            @NonNull String nick_name, java.util.Date ban_date, String ban_reason, String id_user_details) {
+            @NonNull String nick_name, java.util.Date ban_date, String ban_reason, String thumbnail,
+            String id_user_details) {
         this.mEmail = mEmail;
         this.mPassword = mPassword;
         this.mRole = mRole;
@@ -76,6 +78,7 @@ public class User {
         this.nick_name = nick_name;
         this.ban_date = ban_date;
         this.ban_reason = ban_reason;
+        this.thumbnail = thumbnail;
         this.id_user_details = id_user_details;
     }
 
@@ -109,42 +112,6 @@ public class User {
 
     public boolean isMarked() {
         return mMarked;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (!mEmail.equals(user.mEmail)) return false;
-        if (!mPassword.equals(user.mPassword)) return false;
-        if (mRole != user.mRole) return false;
-        if (!mMarked.equals(user.mMarked)) return false;
-        if (!nick_name.equals(user.nick_name)) return false;
-        if (ban_date != null ? !ban_date.equals(user.ban_date) : user.ban_date != null)
-            return false;
-        if (ban_reason != null ? !ban_reason.equals(user.ban_reason) : user.ban_reason != null)
-            return false;
-        if (id_user_details != null ? !id_user_details.equals(user.id_user_details) : user.id_user_details != null)
-            return false;
-        return userDetails != null ? userDetails.equals(user.userDetails) : user.userDetails == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = mEmail.hashCode();
-        result = 31 * result + mPassword.hashCode();
-        result = 31 * result + mRole.hashCode();
-        result = 31 * result + mMarked.hashCode();
-        result = 31 * result + nick_name.hashCode();
-        result = 31 * result + (ban_date != null ? ban_date.hashCode() : 0);
-        result = 31 * result + (ban_reason != null ? ban_reason.hashCode() : 0);
-        result = 31 * result + (id_user_details != null ? id_user_details.hashCode() : 0);
-        result = 31 * result + (userDetails != null ? userDetails.hashCode() : 0);
-        return result;
     }
 
     public String getMEmail() {
@@ -281,5 +248,13 @@ public class User {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getUserDao() : null;
+    }
+
+    public String getThumbnail() {
+        return this.thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

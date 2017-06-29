@@ -49,6 +49,7 @@ public class UsersLocalDataSource implements UsersDataSource {
         checkNotNull(user);
         UserDao userDao = mDaoSession.getUserDao();
         userDao.update(user);
+
     }
 
     @Override
@@ -95,12 +96,14 @@ public class UsersLocalDataSource implements UsersDataSource {
     public void markUser(@NonNull User user) {
         UserDao userDao = mDaoSession.getUserDao();
         userDao.update(user);
+
     }
 
     @Override
     public void uncheckUser(@NonNull User user) {
         UserDao userDao = mDaoSession.getUserDao();
         userDao.update(user);
+
     }
 
     @Override
@@ -123,13 +126,19 @@ public class UsersLocalDataSource implements UsersDataSource {
         HashGenerator generator = new MD5Generator();
         mDaoSession.deleteAll(User.class);
         UserDao userDao = mDaoSession.getUserDao();
-        UserDetails userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя", "Василиевич", "Пупкин", "(000)555-55-55");
+        UserDetails userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя", "Василиевич", "Пупкин", "(000)555-55-55", "Чернигов");
         User user = new User("admin@admin.com", generator.generate("admin"), Roles.ADMIN, false);
         user.setUserDetails(userDetails);
         userDao.insert(user);
 
+        userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя test", "Василиевич test", "Пупкин test", "(000)test-55-55", "Чернигов");
+        user = new User("usertest@admin.com", generator.generate("usertest"), Roles.USER, false);
+        user.setUserDetails(userDetails);
+        user.setThumbnail("JPEG_20170629_162324_508360288.jpg");
+        userDao.insert(user);
+
         for (int i = 0; i<100;i++) {
-            userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя "+i, "Василиевич "+i, "Пупкин "+i, "(000)"+i+"-55-55");
+            userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя "+i, "Василиевич "+i, "Пупкин "+i, "(000)"+i+"-55-55", "Чернигов");
             user = new User("user"+i+"@admin.com", generator.generate("user"+i), Roles.USER, false);
             user.setUserDetails(userDetails);
             userDao.insert(user);
