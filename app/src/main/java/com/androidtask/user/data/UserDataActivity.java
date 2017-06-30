@@ -167,15 +167,19 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
                         @Override
                         public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                             for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                                Log.v(TAG, String.format("Place '%s' has likelihood: %g",
-                                        placeLikelihood.getPlace().getName(),
-                                        placeLikelihood.getLikelihood()));
+//                                Log.v(TAG, String.format("Place '%s' has likelihood: %g",
+//                                        placeLikelihood.getPlace().getName(),
+//                                        placeLikelihood.getLikelihood()));
+                                Snackbar.make(mCity,"PlaceLikelihood is "
+                                        + placeLikelihood.getPlace().getName()
+                                        +"---"+
+                                        placeLikelihood.getLikelihood(),Snackbar.LENGTH_LONG);
                             }
                             likelyPlaces.release();
                         }
                     });
 
-                   // dispatchPickPlaceIntent(LOCATION_REQUEST_CODE);
+                    dispatchPickPlaceIntent(LOCATION_REQUEST_CODE);
                 }
             }
         });
@@ -226,7 +230,7 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
         if (requestCode == LOCATION_REQUEST_CODE && resultCode == RESULT_OK) {
 
             Place place = PlacePicker.getPlace(data, this);
-            String toastMsg = String.format("Place: %s", place.getName());
+            String toastMsg = String.format("Place from PlacePicker: %s", place.getName());
             Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
 
 
