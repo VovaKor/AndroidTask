@@ -2,11 +2,9 @@ package com.androidtask.user.data;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,8 +45,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.File;
-import java.security.Permissions;
-import java.security.acl.Permission;
 
 import static com.androidtask.register.RegisterActivity.ANDROID_API;
 import static com.androidtask.register.RegisterActivity.STORAGE_REQUEST_CODE;

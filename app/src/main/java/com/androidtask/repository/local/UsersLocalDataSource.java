@@ -9,6 +9,7 @@ import com.androidtask.domain.models.UserDetails;
 import com.androidtask.repository.UsersDataSource;
 import com.androidtask.repository.local.persistence.DaoMaster;
 import com.androidtask.repository.local.persistence.DaoSession;
+import com.androidtask.repository.local.persistence.FavoritePlaceDao;
 import com.androidtask.repository.local.persistence.UserDao;
 import com.androidtask.utils.HashGenerator;
 import com.androidtask.utils.MD5Generator;

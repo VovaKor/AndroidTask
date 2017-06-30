@@ -14,6 +14,7 @@ import com.androidtask.admin.actions.AdminActionsPresenter;
 import com.androidtask.admin.actions.ban.AdminBanActivity;
 import com.androidtask.admin.actions.data.AdminUserDataActivity;
 import com.androidtask.user.data.UserDataActivity;
+import com.androidtask.user.places.AddFavoritePlaceActivity;
 import com.androidtask.utils.SessionManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -50,6 +51,13 @@ public class UserActionsActivity extends Activity implements UserActionsContract
                 mPresenter.cancel();
             }
         });
+        Button addPlaceB = (Button) findViewById(R.id.btnAddPlace);
+        addPlaceB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.openAddPlaceActivity();
+            }
+        });
     }
 
 
@@ -70,6 +78,13 @@ public class UserActionsActivity extends Activity implements UserActionsContract
         Intent i = new Intent(getApplicationContext(), activityClass);
         startActivity(i);
         finish();
+    }
+
+    @Override
+    public void showAddPlaceUI(String mUserId) {
+        Intent intent = new Intent(getApplicationContext(), AddFavoritePlaceActivity.class);
+        intent.putExtra(getString(R.string.EXTRA_USER_ID), mUserId);
+        startActivity(intent);
     }
 
     @Override

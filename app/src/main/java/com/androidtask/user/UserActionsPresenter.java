@@ -33,6 +33,11 @@ public class UserActionsPresenter implements UserActionsContract.Presenter {
     }
 
     @Override
+    public void openAddPlaceActivity() {
+        mUserActionsView.showAddPlaceUI(mUserId);
+    }
+
+    @Override
     public void start() {
         mUserActionsView.showUserEmail(mUserId);
     }

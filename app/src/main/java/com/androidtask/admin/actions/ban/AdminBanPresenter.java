@@ -3,16 +3,12 @@ package com.androidtask.admin.actions.ban;
 
 import android.text.TextUtils;
 
-import java.util.TimeZone;
-
 import com.androidtask.UseCase;
 import com.androidtask.UseCaseHandler;
 import com.androidtask.domain.models.User;
 import com.androidtask.domain.usecases.GetUser;
 import com.androidtask.domain.usecases.UpdateUser;
 import com.androidtask.utils.DateManager;
-
-import hirondelle.date4j.DateTime;
 
 /**
  * Created by vova on 26.06.17.

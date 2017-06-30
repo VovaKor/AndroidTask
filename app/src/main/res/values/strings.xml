@@ -51,4 +51,17 @@
     <string name="picture">Аватарка</string>
     <string name="user_city">Город</string>
     <string name="pick_place">Определить город</string>
+    <string name="btn_add_place">Добавить любимое место</string>
+    <string name="favorite_place_title">Моё новое любимое место</string>
+    <string name="take_picture">Сделать снимок</string>
+    <string name="place_title">Название</string>
+    <string name="brief_description">Краткое описание</string>
+    <string name="city_name">Название города</string>
+    <string name="latitude">Широта</string>
+    <string name="longitude">Долгота</string>
+    <string name="pick_coordinates">Получить координаты</string>
+    <string name="btn_save_place">Сохранить</string>
+    <string name="place_saved_success">Любимое место сохранено</string>
+    <string name="place_save_error">Сохранить не удалось.</string>
+    <string name="take_picture_error">Фотография обязательна</string>
 </resources>

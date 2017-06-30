@@ -16,6 +16,8 @@ public interface UserActionsContract {
         void showUserEmail(String userEmail);
 
         void showActivity(Class activityClass);
+
+        void showAddPlaceUI(String mUserId);
     }
 
     interface Presenter extends BasePresenter {
@@ -23,5 +25,7 @@ public interface UserActionsContract {
         void openDetailsActivity();
 
         void cancel();
+
+        void openAddPlaceActivity();
     }
 }

@@ -12,9 +12,13 @@ import com.google.common.base.Strings;
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.ToMany;
 import org.greenrobot.greendao.annotation.ToOne;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
+
+import java.util.List;
+import com.androidtask.repository.local.persistence.FavoritePlaceDao;
 
 /**
  * Created by vova on 22.06.17.
@@ -47,6 +51,9 @@ public class User {
 
     @ToOne(joinProperty = "id_user_details")
     private UserDetails userDetails;
+
+    @ToMany(referencedJoinProperty = "userId")
+    private List<FavoritePlace> places;
 
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
@@ -256,5 +263,33 @@ public class User {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    /**
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    @Generated(hash = 943307540)
+    public List<FavoritePlace> getPlaces() {
+        if (places == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            FavoritePlaceDao targetDao = daoSession.getFavoritePlaceDao();
+            List<FavoritePlace> placesNew = targetDao._queryUser_Places(mEmail);
+            synchronized (this) {
+                if (places == null) {
+                    places = placesNew;
+                }
+            }
+        }
+        return places;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    @Generated(hash = 203716876)
+    public synchronized void resetPlaces() {
+        places = null;
     }
 }
