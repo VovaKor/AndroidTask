@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Войти/Зарегистрировать</string>
+    <string name="app_name">Мои любимые места</string>
     <string name="hint_email">Email-адрес</string>
     <string name="hint_password">Пароль</string>
     <string name="hint_repeat_password">Повторите пароль</string>
