@@ -149,7 +149,7 @@ public class UserDataPresenter implements UserDataContract.Presenter {
 
     @Override
     public void addPictureToGallery() {
-        rotateImage(mCurrentPhotoPath);
+       // rotateImage(mCurrentPhotoPath);
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(mCurrentPhotoPath);
         Uri contentUri = Uri.fromFile(f);

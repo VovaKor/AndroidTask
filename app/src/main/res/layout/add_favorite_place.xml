@@ -77,13 +77,6 @@
             <EditText android:id="@+id/longitude_edit"
                 android:inputType="numberSigned"
                 style="@style/TextField"/>
-            <Button
-                android:id="@+id/btnPickCoordinates"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/pick_coordinates" />
-
             <!-- Update button -->
             <Button android:id="@+id/btnSavePlace"
                 style="@style/RoundedButton"

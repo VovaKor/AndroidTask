@@ -2,10 +2,20 @@ package com.androidtask.user.data;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -16,6 +26,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -33,18 +44,13 @@ import com.androidtask.domain.usecases.UpdateUser;
 import com.androidtask.repository.UsersRepository;
 import com.androidtask.repository.local.UsersLocalDataSource;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import static com.androidtask.register.RegisterActivity.ANDROID_API;
 import static com.androidtask.register.RegisterActivity.STORAGE_REQUEST_CODE;
@@ -57,8 +63,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class UserDataActivity extends FragmentActivity implements UserDataContract.View, GoogleApiClient.OnConnectionFailedListener {
     private static final int LOCATION_REQUEST_CODE = 2;
     private UserDataContract.Presenter mPresenter;
-    private GoogleApiClient mGoogleApiClient;
-
+    private LocationManager locationManager;
+    private String provider;
     final String TAG = getClass().getSimpleName();
     private EditText mNickname;
     private EditText mFirstName;
@@ -67,6 +73,8 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
     private EditText mPhone;
     private ImageView mImageView;
     private EditText mCity;
+    private LocationListener mLocationListener;
+    private Location mLocation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,13 +85,6 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
         StrictMode.setVmPolicy(builder.build());
 
         setContentView(R.layout.user_data);
-
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this, this)
-                .build();
 
         String userId = getIntent().getStringExtra(getString(R.string.EXTRA_USER_ID));
         mNickname = (EditText) findViewById(R.id.nickname_edit);
@@ -102,6 +103,21 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
         holder.mPhone = mPhone;
         holder.mCity = mCity;
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        mLocationListener = new UserDataLocationListener();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLocation = locationManager.getLastKnownLocation(provider);
         mPresenter = new UserDataPresenter(
                 UseCaseHandler.getInstance(),
                 this,
@@ -150,51 +166,77 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
 
             public void onClick(View v) {
                 if (isLocationPermissionGranted()) {
-                    //to suppress warnings
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                            .getCurrentPlace(mGoogleApiClient, null);
-                    result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-                        @Override
-                        public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                            for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-//                                Log.v(TAG, String.format("Place '%s' has likelihood: %g",
-//                                        placeLikelihood.getPlace().getName(),
-//                                        placeLikelihood.getLikelihood()));
-                                Snackbar.make(mCity,"PlaceLikelihood is "
-                                        + placeLikelihood.getPlace().getName()
-                                        +"---"+
-                                        placeLikelihood.getLikelihood(),Snackbar.LENGTH_LONG);
-                            }
-                            likelyPlaces.release();
-                        }
-                    });
+                    dispatchPickPlaceTask(mLocation);
 
-                    dispatchPickPlaceIntent(LOCATION_REQUEST_CODE);
                 }
             }
         });
     }
 
-    private void dispatchPickPlaceIntent(int locationRequestCode) {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-        try {
-            startActivityForResult(builder.build(this), locationRequestCode);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+
+        locationManager.requestLocationUpdates(provider, 400, 1, mLocationListener);
+    }
+
+    private void dispatchPickPlaceTask(final Location location) {
+             if (location!=null){
+                 if (isOnline()){
+                     new AsyncTask<Void, Integer, List<Address>>() {
+                         @Override
+                         protected List<Address> doInBackground(Void... arg0) {
+                             Geocoder coder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                             List<Address> results = null;
+                             try {
+                                 results = coder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                             } catch (IOException e) {
+                                 // nothing
+                             }
+                             return results;
+                         }
+
+                         @Override
+                         protected void onPostExecute(List<Address> results) {
+                             if (results != null) {
+                                 String city = results.get(0).getLocality();
+                                 if (!TextUtils.isEmpty(city)){
+                                     mCity.setText(city);
+                                 } else {
+                                     Toast.makeText(getApplicationContext(),
+                                             getString(R.string.out_of_city_error), Toast.LENGTH_LONG).show();
+                                 }
+
+                             }else {
+                                 Toast.makeText(getApplicationContext(),
+                                         getString(R.string.out_of_address_error), Toast.LENGTH_LONG).show();
+
+                             }
+                         }
+                     }.execute();
+                 }else {
+                     Toast.makeText(getApplicationContext(),
+                             getString(R.string.out_of_network_error), Toast.LENGTH_LONG).show();
+                 }
+
+            }else{
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.out_of_coord_error), Toast.LENGTH_LONG).show();
+
+            }
+
+//
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -202,17 +244,16 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
         if (Build.VERSION.SDK_INT >= ANDROID_API) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Location Permission is granted");
+                Log.v(TAG, "Location Permission is granted");
                 return true;
             } else {
 
-                Log.v(TAG,"Location Permission is revoked");
+                Log.v(TAG, "Location Permission is revoked");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
                 return false;
             }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Location Permission is granted");
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Location Permission is granted");
             return true;
         }
     }
@@ -227,38 +268,49 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
             showImageBitmap(bitmap);
 
         }
-        if (requestCode == LOCATION_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            Place place = PlacePicker.getPlace(data, this);
-            String toastMsg = String.format("Place from PlacePicker: %s", place.getName());
-            Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-
-
-        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case STORAGE_REQUEST_CODE:{
-                if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                    Log.v(TAG,"Storage Permission: "+permissions[0]+ "was "+grantResults[0]);
+        switch (requestCode) {
+            case STORAGE_REQUEST_CODE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.v(TAG, "Storage Permission: " + permissions[0] + "was " + grantResults[0]);
                     dispatchTakePictureIntent(STORAGE_REQUEST_CODE);
 
                 }
 
-            }break;
-            case LOCATION_REQUEST_CODE:{
-                if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                    Log.v(TAG,"Location Permission: "+permissions[0]+ "was "+grantResults[0]);
+            }
+            break;
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.v(TAG, "Location Permission: " + permissions[0] + "was " + grantResults[0]);
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    locationManager.requestLocationUpdates(provider, 400, 1, mLocationListener);
 
-                    dispatchPickPlaceIntent(LOCATION_REQUEST_CODE);
                 }
             }break;
         }
 
 
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -363,5 +415,27 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
         public EditText mPhone;
 
         public EditText mCity;
+    }
+
+    private class UserDataLocationListener implements LocationListener{
+        @Override
+        public void onLocationChanged(Location location) {
+            mLocation = location;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
     }
 }

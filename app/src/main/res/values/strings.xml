@@ -64,4 +64,8 @@
     <string name="place_saved_success">Любимое место сохранено</string>
     <string name="place_save_error">Сохранить не удалось.</string>
     <string name="take_picture_error">Фотография обязательна</string>
+    <string name="out_of_city_error">Вы вне города</string>
+    <string name="out_of_address_error">Список адресов недоступен</string>
+    <string name="out_of_coord_error">Координаты недоступны</string>
+    <string name="out_of_network_error">Подключение к интернету отсутствует</string>
 </resources>

@@ -15,6 +15,8 @@ import java.io.File;
 interface AddFavoritePlaceContract {
 
     interface View extends BaseView<Presenter> {
+        void showPlaceCoordinates();
+
         void showImageBitmap(Bitmap bitmap);
 
         void showPlaceInsertedSuccess();
@@ -24,6 +26,8 @@ interface AddFavoritePlaceContract {
         void showSaveError();
 
         void showPhotoEmptyError();
+
+        void showCity();
     }
     interface Presenter extends BasePresenter {
 

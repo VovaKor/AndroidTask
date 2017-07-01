@@ -26,6 +26,7 @@ public class AdminUserDataPresenter implements AdminUserDataContract.Presenter {
         mUseCaseHandler.execute(mGetUser, new GetUser.RequestValues(mUserId), new UseCase.UseCaseCallback<GetUser.ResponseValue>() {
             @Override
             public void onSuccess(GetUser.ResponseValue response) {
+
                 mView.showUserDetails(response.getUser());
             }
 

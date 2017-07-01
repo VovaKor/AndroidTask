@@ -7,11 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -19,14 +24,13 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.androidtask.R;
 import com.androidtask.UseCaseHandler;
@@ -35,6 +39,9 @@ import com.androidtask.repository.FavoritePlacesRepository;
 import com.androidtask.repository.local.FavoritePlaceLocalDataSource;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import static com.androidtask.register.RegisterActivity.ANDROID_API;
 import static com.androidtask.register.RegisterActivity.STORAGE_REQUEST_CODE;
@@ -56,6 +63,8 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
     private ImageView mImageView;
     private EditText mCity;
     private String provider;
+    private Location mLocation;
+    private LocationListener mLocationListener;
 
 
     @Override
@@ -84,9 +93,24 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
         holder.mCity = mCity;
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        Criteria criteria = new Criteria();
-//        provider = locationManager.getBestProvider(criteria, false);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        mLocationListener = new CityLocationListener();
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            isLocationPermissionGranted();
+            return;
+        }
+        mLocation = locationManager.getLastKnownLocation(provider);
+        locationManager.requestLocationUpdates(provider, 400, 1, mLocationListener);
 
         mPresenter = new AddFavoritePlacePresenter(
                 UseCaseHandler.getInstance(),
@@ -95,7 +119,7 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
                 userId,
                 new InsertPlace(FavoritePlacesRepository.getInstance(FavoritePlaceLocalDataSource.getInstance(getApplicationContext()))));
 
-        mPresenter.start();
+
         final Button savePlaceB = (Button) findViewById(R.id.btnSavePlace);
         savePlaceB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,78 +146,27 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
                 }
             }
         });
-        Button pickCoordinatesB = (Button) findViewById(R.id.btnPickCoordinates);
-        pickCoordinatesB.setOnClickListener(new View.OnClickListener() {
-            @Override
 
-            public void onClick(View v) {
-                if (isLocationPermissionGranted()) {
-                    getPlaceCoordinates();
-                }
-            }
-        });
     }
 
-    private LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.start();
+    }
+
+    @Override
+    public void showPlaceCoordinates() {
+
+        // Initialize the location fields
+        if (mLocation != null) {
+            mLatitude.setText(Double.toString(mLocation.getLatitude()));
+            mLongitude.setText(Double.toString(mLocation.getLongitude()));
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.out_of_coord_error), Toast.LENGTH_LONG).show();
 
         }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            mLongitude.setError(null);
-            mLatitude.setError(null);
-            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            Location location = locationManager.getLastKnownLocation(provider);
-
-            // Initialize the location fields
-            if (location != null) {
-                mLatitude.setText(Double.toString(location.getLatitude()));
-                mLongitude.setText(Double.toString(location.getLongitude()));
-            } else {
-                mLatitude.setError("Location not available");
-                mLongitude.setError("Location not available");
-            }
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
-    private void getPlaceCoordinates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                1000 * 10, 10, locationListener);
-        locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER, 1000 * 10, 10,
-                locationListener);
 
     }
 
@@ -217,6 +190,25 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        locationManager.requestLocationUpdates(provider, 400, 1, mLocationListener);
+        showPlaceCoordinates();
+        showCity();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -227,6 +219,13 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
             showImageBitmap(bitmap);
 
         }
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
     @Override
@@ -245,7 +244,8 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
                 if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
                     Log.v(TAG,"Location Permission: "+permissions[0]+ "was "+grantResults[0]);
 
-                    getPlaceCoordinates();
+                    showPlaceCoordinates();
+                    showCity();
                 }
             }break;
         }
@@ -296,7 +296,7 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
     @Override
     public void showPlaceInsertedSuccess() {
         Snackbar.make(mTitle,getString(R.string.place_saved_success),Snackbar.LENGTH_LONG).show();
-        finish();
+
     }
 
     @Override
@@ -314,11 +314,81 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
         Snackbar.make(mTitle,getString(R.string.take_picture_error),Snackbar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void showCity() {
+        if (mLocation!=null){
+            if (isOnline()){
+            new AsyncTask<Void, Integer, List<Address>>() {
+                @Override
+                protected List<Address> doInBackground(Void... arg0) {
+                    Geocoder coder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                    List<Address> results = null;
+                    try {
+                        results = coder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
+                    } catch (IOException e) {
+                        // nothing
+                    }
+                    return results;
+                }
+
+                @Override
+                protected void onPostExecute(List<Address> results) {
+
+
+                    if (results != null) {
+                        String city = results.get(0).getLocality();
+                        if (!TextUtils.isEmpty(city)){
+                            mCity.setText(city);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.out_of_city_error), Toast.LENGTH_LONG).show();
+                        }
+
+                    }else {
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.out_of_address_error), Toast.LENGTH_LONG).show();
+
+                    }
+                }
+            }.execute();
+            }else {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.out_of_network_error), Toast.LENGTH_LONG).show();
+            }
+        }else{
+        Toast.makeText(getApplicationContext(),
+                getString(R.string.out_of_coord_error), Toast.LENGTH_LONG).show();
+
+        }
+
+    }
+
     class EditTextHolder {
         public EditText mTitle;
         public EditText mDescription;
         public EditText mLatitude;
         public EditText mLongitude;
         public EditText mCity;
+    }
+    private class CityLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location location) {
+            mLocation = location;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
     }
 }

@@ -126,6 +126,7 @@ public class UsersLocalDataSource implements UsersDataSource {
     private void bootstrapDB() {
         HashGenerator generator = new MD5Generator();
         mDaoSession.deleteAll(User.class);
+        mDaoSession.clear();
         UserDao userDao = mDaoSession.getUserDao();
         UserDetails userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя", "Василиевич", "Пупкин", "(000)555-55-55", "Чернигов");
         User user = new User("admin@admin.com", generator.generate("admin"), Roles.ADMIN, false);

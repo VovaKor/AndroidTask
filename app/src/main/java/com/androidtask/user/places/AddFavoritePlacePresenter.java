@@ -55,6 +55,8 @@ public class AddFavoritePlacePresenter implements AddFavoritePlaceContract.Prese
 
     @Override
     public void start() {
+        mView.showPlaceCoordinates();
+        mView.showCity();
     }
 
     @Override
