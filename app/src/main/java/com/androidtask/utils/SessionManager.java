@@ -10,6 +10,7 @@ import com.androidtask.domain.models.Roles;
  */
 
 public class SessionManager {
+    private static final String PATH = "path";
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private Context context;
@@ -53,5 +54,14 @@ public class SessionManager {
 
     public boolean isLoggedIn(){
         return preferences.getBoolean(IS_LOGGEDIN, false);
+    }
+
+    public void saveCurrentPhotoPath(String mCurrentPhotoPath) {
+        editor.putString(PATH,mCurrentPhotoPath);
+        editor.commit();
+    }
+
+    public String getPath() {
+        return preferences.getString(PATH,null);
     }
 }

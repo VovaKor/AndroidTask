@@ -37,6 +37,7 @@ import com.androidtask.UseCaseHandler;
 import com.androidtask.domain.usecases.InsertPlace;
 import com.androidtask.repository.FavoritePlacesRepository;
 import com.androidtask.repository.local.FavoritePlaceLocalDataSource;
+import com.androidtask.utils.SessionManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AddFavoritePlaceActivity extends Activity implements AddFavoritePlaceContract.View {
     private static final int LOCATION_REQUEST_CODE = 2;
+    private static final String PHOTO_PATH = "photoPath";
     private AddFavoritePlaceContract.Presenter mPresenter;
     private LocationManager locationManager;
     final String TAG = getClass().getSimpleName();
@@ -65,6 +67,7 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
     private String provider;
     private Location mLocation;
     private LocationListener mLocationListener;
+    private String mCurrentPhotoPath;
 
 
     @Override
@@ -153,6 +156,13 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
     protected void onStart() {
         super.onStart();
         mPresenter.start();
+        String path = SessionManager.getInstance(getApplicationContext()).getPath();
+        if (!TextUtils.isEmpty(path)){
+
+            Bitmap bitmap = mPresenter.createImageBitmap(path, getResources().getDisplayMetrics().density);
+            showImageBitmap(bitmap);
+
+        }
     }
 
     @Override
@@ -212,11 +222,15 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == STORAGE_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            mPresenter.addPictureToGallery();
-            Bitmap bitmap = mPresenter.createImageBitmap(mImageView);
-            showImageBitmap(bitmap);
+        if (requestCode == STORAGE_REQUEST_CODE && resultCode == RESULT_OK) {
+            String path = SessionManager.getInstance(getApplicationContext()).getPath();
+            if (!TextUtils.isEmpty(path)){
+                mPresenter.addPictureToGallery(path);
+                Bitmap bitmap = mPresenter.createImageBitmap(path, getResources().getDisplayMetrics().density);
+                showImageBitmap(bitmap);
+
+            }
 
         }
     }
@@ -280,6 +294,7 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
 
         if (f != null) {
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, actionCode);
             }

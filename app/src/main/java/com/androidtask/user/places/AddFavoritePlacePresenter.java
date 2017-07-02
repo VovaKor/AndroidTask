@@ -6,13 +6,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.widget.ImageView;
 
 import com.androidtask.R;
 import com.androidtask.UseCase;
 import com.androidtask.UseCaseHandler;
 import com.androidtask.domain.models.FavoritePlace;
 import com.androidtask.domain.usecases.InsertPlace;
+import com.androidtask.utils.SessionManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,9 @@ import static com.androidtask.register.RegisterPresenter.FILE_DATE_TEMPLATE;
 import static com.androidtask.register.RegisterPresenter.FILE_EXTENSION;
 import static com.androidtask.register.RegisterPresenter.FILE_PREFIX;
 import static com.androidtask.register.RegisterPresenter.SEPARATOR;
+import static com.androidtask.user.data.UserDataPresenter.CORRECTION;
+import static com.androidtask.user.data.UserDataPresenter.THUMBNAIL_HEIGHT;
+import static com.androidtask.user.data.UserDataPresenter.THUMBNAIL_WIDTH;
 
 /**
  * Created by vova on 30.06.17.
@@ -129,7 +132,8 @@ public class AddFavoritePlacePresenter implements AddFavoritePlaceContract.Prese
 
             mCurrentPhotoPath = image.getAbsolutePath();
             mPhotoName = image.getName();
-
+            SessionManager manager = SessionManager.getInstance(mView.getApplicationContext());
+            manager.saveCurrentPhotoPath(mCurrentPhotoPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -138,25 +142,26 @@ public class AddFavoritePlacePresenter implements AddFavoritePlaceContract.Prese
     }
 
     @Override
-    public void addPictureToGallery() {
+    public void addPictureToGallery(String photoPath) {
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
+        File f = new File(photoPath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         mView.sendBroadcast(mediaScanIntent);
     }
 
     @Override
-    public Bitmap createImageBitmap(ImageView mImageView) {
+    public Bitmap createImageBitmap(String path, float density) {
+
         // Get the dimensions of the View
-        int targetW = mImageView.getWidth();
-        int targetH = mImageView.getHeight();
+        int targetW = (int) (THUMBNAIL_WIDTH * density + CORRECTION);
+        int targetH = (int) (THUMBNAIL_HEIGHT * density + CORRECTION);
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        BitmapFactory.decodeFile(path, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
@@ -169,9 +174,14 @@ public class AddFavoritePlacePresenter implements AddFavoritePlaceContract.Prese
         bmOptions.inPurgeable = true;
 
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(path, bmOptions);
 
         return bitmap;
+    }
+
+    @Override
+    public String getCurrentPhotoPath() {
+        return mCurrentPhotoPath;
     }
 
     private File getStorageDirectory() {

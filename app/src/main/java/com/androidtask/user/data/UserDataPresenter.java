@@ -35,8 +35,8 @@ import static com.androidtask.register.RegisterPresenter.SEPARATOR;
 
 public class UserDataPresenter implements UserDataContract.Presenter {
     public static final String SLASH = "/";
-    private static final int THUMBNAIL_WIDTH = 150;
-    private static final int THUMBNAIL_HEIGHT = 150;
+    public static final int THUMBNAIL_WIDTH = 150;
+    public static final int THUMBNAIL_HEIGHT = 150;
     public static final float CORRECTION = 0.5f;
     private final UseCaseHandler mUseCaseHandler;
     private final UpdateUser mUpdateUser;

@@ -37,10 +37,10 @@ interface AddFavoritePlaceContract {
 
         File createImageFile();
 
-        void addPictureToGallery();
+        void addPictureToGallery(String photoPath);
 
-        Bitmap createImageBitmap(ImageView mImageView);
+        Bitmap createImageBitmap(String path, float density);
 
-
+        String getCurrentPhotoPath();
     }
 }
