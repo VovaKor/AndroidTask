@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.androidtask.utils.ScrollChildSwipeRefreshLayout
+<com.favoriteplaces.utils.ScrollChildSwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
@@ -11,4 +11,4 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-</com.androidtask.utils.ScrollChildSwipeRefreshLayout>
+</com.favoriteplaces.utils.ScrollChildSwipeRefreshLayout>
