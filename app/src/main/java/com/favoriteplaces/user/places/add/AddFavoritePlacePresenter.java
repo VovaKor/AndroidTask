@@ -1,10 +1,8 @@
-package com.favoriteplaces.user.places;
+package com.favoriteplaces.user.places.add;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.favoriteplaces.R;
@@ -12,21 +10,12 @@ import com.favoriteplaces.UseCase;
 import com.favoriteplaces.UseCaseHandler;
 import com.favoriteplaces.domain.models.FavoritePlace;
 import com.favoriteplaces.domain.usecases.InsertPlace;
+import com.favoriteplaces.utils.PictureManager;
 import com.favoriteplaces.utils.SessionManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
-
-import static com.favoriteplaces.register.RegisterPresenter.FILE_DATE_TEMPLATE;
-import static com.favoriteplaces.register.RegisterPresenter.FILE_EXTENSION;
-import static com.favoriteplaces.register.RegisterPresenter.FILE_PREFIX;
-import static com.favoriteplaces.register.RegisterPresenter.SEPARATOR;
-import static com.favoriteplaces.user.data.UserDataPresenter.CORRECTION;
-import static com.favoriteplaces.user.data.UserDataPresenter.THUMBNAIL_HEIGHT;
-import static com.favoriteplaces.user.data.UserDataPresenter.THUMBNAIL_WIDTH;
 
 /**
  * Created by vova on 30.06.17.
@@ -117,19 +106,11 @@ public class AddFavoritePlacePresenter implements AddFavoritePlaceContract.Prese
 
     @Override
     public File createImageFile() {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat(FILE_DATE_TEMPLATE).format(new Date());
-        String imageFileName = FILE_PREFIX + timeStamp + SEPARATOR;
 
         File image = null;
         try {
 
-            image = File.createTempFile(
-                    imageFileName,  /* prefix */
-                    FILE_EXTENSION,         /* suffix */
-                    getStorageDirectory()      /* directory */
-            );
-
+            image = PictureManager.getInstance().createTempFile();
             mCurrentPhotoPath = image.getAbsolutePath();
             mPhotoName = image.getName();
             SessionManager manager = SessionManager.getInstance(mView.getApplicationContext());
@@ -143,49 +124,13 @@ public class AddFavoritePlacePresenter implements AddFavoritePlaceContract.Prese
 
     @Override
     public void addPictureToGallery(String photoPath) {
-
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(photoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        mView.sendBroadcast(mediaScanIntent);
+        PictureManager.getInstance().addPictureToGallery(photoPath,mView);
     }
 
     @Override
-    public Bitmap createImageBitmap(String path, float density) {
-
-        // Get the dimensions of the View
-        int targetW = (int) (THUMBNAIL_WIDTH * density + CORRECTION);
-        int targetH = (int) (THUMBNAIL_HEIGHT * density + CORRECTION);
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-
-        Bitmap bitmap = BitmapFactory.decodeFile(path, bmOptions);
-
-        return bitmap;
+    public void createImagePreview(String path, float density) {
+        Bitmap bitmap = PictureManager.getInstance().createBigImageBitmap(path, density);
+        mView.showImageBitmap(bitmap);
     }
 
-    @Override
-    public String getCurrentPhotoPath() {
-        return mCurrentPhotoPath;
-    }
-
-    private File getStorageDirectory() {
-        return   Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-
-    }
 }

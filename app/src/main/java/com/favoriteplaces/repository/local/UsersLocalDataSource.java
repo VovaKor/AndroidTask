@@ -3,12 +3,14 @@ package com.favoriteplaces.repository.local;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.favoriteplaces.domain.models.FavoritePlace;
 import com.favoriteplaces.domain.models.Roles;
 import com.favoriteplaces.domain.models.User;
 import com.favoriteplaces.domain.models.UserDetails;
 import com.favoriteplaces.repository.UsersDataSource;
 import com.favoriteplaces.repository.local.persistence.DaoMaster;
 import com.favoriteplaces.repository.local.persistence.DaoSession;
+import com.favoriteplaces.repository.local.persistence.FavoritePlaceDao;
 import com.favoriteplaces.repository.local.persistence.UserDao;
 import com.favoriteplaces.utils.HashGenerator;
 import com.favoriteplaces.utils.MD5Generator;
@@ -124,8 +126,12 @@ public class UsersLocalDataSource implements UsersDataSource {
     private void bootstrapDB() {
         HashGenerator generator = new MD5Generator();
         mDaoSession.deleteAll(User.class);
+        mDaoSession.deleteAll(FavoritePlace.class);
+        mDaoSession.deleteAll(UserDetails.class);
         mDaoSession.clear();
         UserDao userDao = mDaoSession.getUserDao();
+        FavoritePlaceDao favoritePlaceDao = mDaoSession.getFavoritePlaceDao();
+
         UserDetails userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя", "Василиевич", "Пупкин", "(000)555-55-55", "Чернигов");
         User user = new User("admin@admin.com", generator.generate("admin"), Roles.ADMIN, false);
         user.setUserDetails(userDetails);
@@ -136,6 +142,20 @@ public class UsersLocalDataSource implements UsersDataSource {
         user.setUserDetails(userDetails);
         user.setThumbnail("JPEG_20170629_162324_508360288.jpg");
         userDao.insert(user);
+
+        FavoritePlace favoritePlace ;
+        for (int i = 0; i<100;i++) {
+            favoritePlace = new FavoritePlace();
+            favoritePlace.setPhoto("JPEG_20170629_162324_508360288.jpg");
+            favoritePlace.setId(UUID.randomUUID().toString());
+            favoritePlace.setCity("Киев");
+            favoritePlace.setDescription("Description "+i);
+            favoritePlace.setLatitude(50.433334);
+            favoritePlace.setLongitude(30.516666);
+            favoritePlace.setUserId(user.getId());
+            favoritePlace.setTitle("Test title "+i);
+            favoritePlaceDao.insert(favoritePlace);
+        }
 
         for (int i = 0; i<100;i++) {
             userDetails = new UserDetails(UUID.randomUUID().toString(),"Bacя "+i, "Василиевич "+i, "Пупкин "+i, "(000)"+i+"-55-55", "Чернигов");

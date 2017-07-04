@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.favoriteplaces.R;
-import com.favoriteplaces.admin.actions.ban.AdminBanActivity;
-import com.favoriteplaces.admin.actions.data.AdminUserDataActivity;
+import com.favoriteplaces.admin.ban.AdminBanActivity;
+import com.favoriteplaces.admin.data.AdminUserDataActivity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

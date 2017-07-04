@@ -10,7 +10,7 @@ import com.favoriteplaces.admin.AdminActivity;
 import com.favoriteplaces.domain.models.Roles;
 import com.favoriteplaces.domain.models.User;
 import com.favoriteplaces.domain.usecases.GetUser;
-import com.favoriteplaces.user.UserActionsActivity;
+import com.favoriteplaces.user.actions.UserActionsActivity;
 import com.favoriteplaces.utils.DateManager;
 import com.favoriteplaces.utils.HashGenerator;
 import com.favoriteplaces.utils.MD5Generator;

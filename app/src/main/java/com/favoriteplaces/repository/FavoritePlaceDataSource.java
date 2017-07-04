@@ -13,6 +13,10 @@ import java.util.List;
 public interface FavoritePlaceDataSource {
     void insertFavoritePlace(@NonNull FavoritePlace FavoritePlace);
 
+    void getFavoritePlaces(@NonNull String userId, LoadFavoritePlacesCallback loadFavoritePlacesCallback);
+
+    void getPlace(String placeId, GetFavoritePlaceCallback getFavoritePlaceCallback);
+
     interface LoadFavoritePlacesCallback {
 
         void onFavoritePlacesLoaded(List<FavoritePlace> favoritePlaces);

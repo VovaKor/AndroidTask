@@ -1,4 +1,4 @@
-package com.favoriteplaces.user;
+package com.favoriteplaces.user.actions;
 
 import com.favoriteplaces.login.LoginActivity;
 import com.favoriteplaces.utils.SessionManager;
@@ -31,8 +31,8 @@ public class UserActionsPresenter implements UserActionsContract.Presenter {
     }
 
     @Override
-    public void openAddPlaceActivity() {
-        mUserActionsView.showAddPlaceUI(mUserId);
+    public void openPlaceListActivity() {
+        mUserActionsView.showPlaceListUI(mUserId);
     }
 
     @Override

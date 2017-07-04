@@ -1,4 +1,4 @@
-package com.favoriteplaces.user.places;
+package com.favoriteplaces.user.places.add;
 
 import android.graphics.Bitmap;
 
@@ -38,8 +38,7 @@ interface AddFavoritePlaceContract {
 
         void addPictureToGallery(String photoPath);
 
-        Bitmap createImageBitmap(String path, float density);
+        void createImagePreview(String path, float density);
 
-        String getCurrentPhotoPath();
     }
 }

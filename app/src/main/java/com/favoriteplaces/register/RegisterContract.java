@@ -48,7 +48,7 @@ public interface RegisterContract {
 
         File createImageFile();
 
-        Bitmap createImageBitmap(ImageView mImageView);
+        void addImageBitmapToView(int width, int height);
 
         void addPictureToGallery();
     }

@@ -12,7 +12,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Fetches the list of tasks.
+ * Fetches the list of users.
  */
 public class GetUsers extends UseCase<GetUsers.RequestValues, GetUsers.ResponseValue> {
 

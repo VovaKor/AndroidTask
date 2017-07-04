@@ -1,4 +1,4 @@
-package com.favoriteplaces.admin.actions.ban;
+package com.favoriteplaces.admin.ban;
 
 import android.app.Activity;
 import android.os.Bundle;

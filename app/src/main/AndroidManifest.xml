@@ -35,12 +35,14 @@
 
         <activity android:name="com.favoriteplaces.admin.AdminActivity" />
         <activity android:name="com.favoriteplaces.admin.actions.AdminActionsActivity" />
-        <activity android:name="com.favoriteplaces.admin.actions.data.AdminUserDataActivity" />
-        <activity android:name="com.favoriteplaces.admin.actions.ban.AdminBanActivity" />
+        <activity android:name=".admin.data.AdminUserDataActivity" />
+        <activity android:name=".admin.ban.AdminBanActivity" />
 
-        <activity android:name="com.favoriteplaces.user.UserActionsActivity" />
+        <activity android:name="com.favoriteplaces.user.actions.UserActionsActivity" />
         <activity android:name="com.favoriteplaces.user.data.UserDataActivity" />
-        <activity android:name="com.favoriteplaces.user.places.AddFavoritePlaceActivity" />
+        <activity android:name="com.favoriteplaces.user.places.add.AddFavoritePlaceActivity" />
+        <activity android:name=".user.places.details.FPDetailsActivity" />
+        <activity android:name=".user.places.placeslist.FPListActivity" />
 
     </application>
 

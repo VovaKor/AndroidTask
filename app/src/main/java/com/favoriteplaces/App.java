@@ -2,7 +2,7 @@ package com.favoriteplaces;
 
 import android.app.Application;
 
-import com.favoriteplaces.weathermap.WeatherMapAPI;
+import com.favoriteplaces.rest.WeatherMapAPI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

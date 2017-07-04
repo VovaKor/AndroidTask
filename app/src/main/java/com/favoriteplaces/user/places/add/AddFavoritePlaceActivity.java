@@ -1,4 +1,4 @@
-package com.favoriteplaces.user.places;
+package com.favoriteplaces.user.places.add;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -54,7 +54,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AddFavoritePlaceActivity extends Activity implements AddFavoritePlaceContract.View {
     private static final int LOCATION_REQUEST_CODE = 2;
-    private static final String PHOTO_PATH = "photoPath";
+
     private AddFavoritePlaceContract.Presenter mPresenter;
     private LocationManager locationManager;
     final String TAG = getClass().getSimpleName();
@@ -67,7 +67,7 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
     private String provider;
     private Location mLocation;
     private LocationListener mLocationListener;
-    private String mCurrentPhotoPath;
+
 
 
     @Override
@@ -115,7 +115,7 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
         mLocation = locationManager.getLastKnownLocation(provider);
         locationManager.requestLocationUpdates(provider, 400, 1, mLocationListener);
 
-        mPresenter = new AddFavoritePlacePresenter(
+        new AddFavoritePlacePresenter(
                 UseCaseHandler.getInstance(),
                 this,
                 holder,
@@ -149,28 +149,25 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
                 }
             }
         });
+        mPresenter.start();
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.start();
+
         String path = SessionManager.getInstance(getApplicationContext()).getPath();
         if (!TextUtils.isEmpty(path)){
 
-            Bitmap bitmap = mPresenter.createImageBitmap(path, getResources().getDisplayMetrics().density);
-            showImageBitmap(bitmap);
-
+            mPresenter.createImagePreview(path, getResources().getDisplayMetrics().density);
         }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mLocationListener = null;
-        provider = null;
-        locationManager = null;
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(mLocationListener);
     }
 
     @Override
@@ -235,19 +232,11 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
             String path = SessionManager.getInstance(getApplicationContext()).getPath();
             if (!TextUtils.isEmpty(path)){
                 mPresenter.addPictureToGallery(path);
-                Bitmap bitmap = mPresenter.createImageBitmap(path, getResources().getDisplayMetrics().density);
-                showImageBitmap(bitmap);
+                mPresenter.createImagePreview(path, getResources().getDisplayMetrics().density);
 
             }
 
         }
-    }
-
-    private boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
     }
 
     @Override
@@ -384,6 +373,12 @@ public class AddFavoritePlaceActivity extends Activity implements AddFavoritePla
 
         }
 
+    }
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
     class EditTextHolder {

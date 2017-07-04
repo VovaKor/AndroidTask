@@ -68,4 +68,12 @@
     <string name="out_of_address_error">Список адресов недоступен</string>
     <string name="out_of_coord_error">Координаты недоступны</string>
     <string name="out_of_network_error">Подключение к интернету отсутствует</string>
+    <string name="btn_show_places">Посмотреть любимые места</string>
+    <string name="EXTRA_PLACE_ID">PLACE_ID</string>
+    <string name="loading_places_error">Ошибка загрузки</string>
+    <string name="forecast">Погодные условия</string>
+    <string name="temperature">Температура, &#176;C</string>
+    <string name="wind">Ветер, м/с</string>
+    <string name="clouds">Облачность, %</string>
+    <string name="deleted_photo_error">Фотография удалена</string>
 </resources>

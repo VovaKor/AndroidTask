@@ -35,9 +35,8 @@ public interface UserDataContract {
 
         void addPictureToGallery();
 
-        Bitmap createImageBitmap(ImageView mImageView);
+        void addImageBitmapToView(int width, int height);
 
-        Bitmap getThumbnail(String thumbnail, float density);
-
+        void addThumbnailToView(String thumbnail, float density);
     }
 }

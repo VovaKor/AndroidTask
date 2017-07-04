@@ -1,8 +1,7 @@
 package com.favoriteplaces.admin;
 
+
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.favoriteplaces.UseCase;
@@ -13,12 +12,10 @@ import com.favoriteplaces.domain.usecases.GetUsers;
 import com.favoriteplaces.domain.usecases.MarkUser;
 import com.favoriteplaces.domain.usecases.UncheckUser;
 import com.favoriteplaces.repository.UsersDataSource;
+import com.favoriteplaces.utils.PictureManager;
 
-import java.io.File;
 import java.util.List;
 
-import static com.favoriteplaces.user.data.UserDataPresenter.CORRECTION;
-import static com.favoriteplaces.user.data.UserDataPresenter.SLASH;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -26,8 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * UI as required.
  */
 public class AdminPresenter implements AdminContract.Presenter {
-    private static final int THUMBNAIL_WIDTH = 60;
-    private static final int THUMBNAIL_HEIGHT = 60;
+
     private final AdminContract.View mAdminFragment;
     private final GetUsers mGetUsers;
     private final MarkUser mMarkUser;
@@ -43,8 +39,8 @@ public class AdminPresenter implements AdminContract.Presenter {
                           @NonNull MarkUser markUser, @NonNull UncheckUser uncheckUser,
                           @NonNull DeleteUsers deleteUsers) {
         mUseCaseHandler = checkNotNull(useCaseHandler, "usecaseHandler cannot be null");
-        mAdminFragment = checkNotNull(adminView, "tasksView cannot be null!");
-        mGetUsers = checkNotNull(getUsers, "loginUser cannot be null!");
+        mAdminFragment = checkNotNull(adminView, "View cannot be null!");
+        mGetUsers = checkNotNull(getUsers, "Users cannot be null!");
         mMarkUser = checkNotNull(markUser, "markUser cannot be null!");
         mUncheckUser = checkNotNull(uncheckUser, "uncheckUser cannot be null!");
         mDeleteUsers = checkNotNull(deleteUsers,
@@ -181,35 +177,9 @@ public class AdminPresenter implements AdminContract.Presenter {
 
     @Override
     public Bitmap createImageBitmap(String thumbnail, float density) {
-        String currentPhotoPath = getStorageDirectory().getAbsolutePath()+SLASH+thumbnail;
-        // Get the dimensions of the View
-        int targetW = (int) (THUMBNAIL_WIDTH * density + CORRECTION);
-        int targetH = (int) (THUMBNAIL_HEIGHT * density + CORRECTION);
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-
+        Bitmap bitmap = PictureManager.getInstance().createSmallImageBitmap(thumbnail, density);
         return bitmap;
     }
-    private File getStorageDirectory() {
-        return   Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-    }
 
 }

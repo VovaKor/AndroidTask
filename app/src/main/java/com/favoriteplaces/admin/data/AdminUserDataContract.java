@@ -1,4 +1,4 @@
-package com.favoriteplaces.admin.actions.data;
+package com.favoriteplaces.admin.data;
 
 import com.favoriteplaces.BasePresenter;
 import com.favoriteplaces.BaseView;

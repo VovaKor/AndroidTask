@@ -94,8 +94,8 @@ public class RegisterActivity extends Activity implements RegisterContract.View 
         if (requestCode == STORAGE_REQUEST_CODE && resultCode == RESULT_OK) {
 
             mPresenter.addPictureToGallery();
-            Bitmap bitmap = mPresenter.createImageBitmap(mImageView);
-            showImageBitmap(bitmap);
+            mPresenter.addImageBitmapToView(mImageView.getWidth(),mImageView.getHeight());
+
 
         }
     }

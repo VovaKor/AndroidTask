@@ -20,7 +20,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -268,8 +267,7 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
         if (requestCode == STORAGE_REQUEST_CODE && resultCode == RESULT_OK) {
 
             mPresenter.addPictureToGallery();
-            Bitmap bitmap = mPresenter.createImageBitmap(mImageView);
-            showImageBitmap(bitmap);
+            mPresenter.addImageBitmapToView(mImageView.getWidth(), mImageView.getHeight());
 
         }
 
@@ -360,8 +358,8 @@ public class UserDataActivity extends FragmentActivity implements UserDataContra
         UserDetails userDetails = user.getUserDetails();
         mNickname.setText(user.getNick_name());
         if (user.getThumbnail()!= null){
-            Bitmap bitmap = mPresenter.getThumbnail(user.getThumbnail(), getResources().getDisplayMetrics().density);
-            showImageBitmap(bitmap);
+            mPresenter.addThumbnailToView(user.getThumbnail(), getResources().getDisplayMetrics().density);
+
           }
         if (userDetails!=null) {
             mFirstName.setText(userDetails.getFirst_name());

@@ -12,6 +12,8 @@ import com.favoriteplaces.repository.local.persistence.FavoritePlaceDao;
 
 import org.greenrobot.greendao.database.Database;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -45,5 +47,29 @@ public class FavoritePlaceLocalDataSource implements FavoritePlaceDataSource {
         checkNotNull(favoritePlace);
         FavoritePlaceDao favoritePlaceDao = mDaoSession.getFavoritePlaceDao();
         favoritePlaceDao.insert(favoritePlace);
+    }
+
+    @Override
+    public void getFavoritePlaces(@NonNull String userId, LoadFavoritePlacesCallback loadFavoritePlacesCallback) {
+        FavoritePlaceDao favoritePlaceDao = mDaoSession.getFavoritePlaceDao();
+        List<FavoritePlace> places = favoritePlaceDao._queryUser_Places(userId);
+
+        if (places.isEmpty()) {
+            // This will be called if the table is new or just empty.
+            loadFavoritePlacesCallback.onDataNotAvailable();
+        } else {
+            loadFavoritePlacesCallback.onFavoritePlacesLoaded(places);
+        }
+    }
+
+    @Override
+    public void getPlace(String placeId, GetFavoritePlaceCallback callback) {
+        FavoritePlaceDao favoritePlaceDao = mDaoSession.getFavoritePlaceDao();
+        FavoritePlace place = favoritePlaceDao.load(placeId);
+        if (place != null){
+            callback.onFavoritePlaceLoaded(place);
+        }else {
+            callback.onDataNotAvailable();
+        }
     }
 }

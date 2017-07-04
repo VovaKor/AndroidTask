@@ -19,6 +19,7 @@ import com.favoriteplaces.domain.usecases.InsertUser;
 import com.favoriteplaces.login.LoginActivity;
 import com.favoriteplaces.utils.HashGenerator;
 import com.favoriteplaces.utils.MD5Generator;
+import com.favoriteplaces.utils.PictureManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,10 +42,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     private final int PASSWORD_MIN_LENGTH = 4;
     private final String EMAIL_REGEXP = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
-    public static final String SEPARATOR = "_";
-    public static final String FILE_DATE_TEMPLATE = "yyyyMMdd_HHmmss";
-    public static final String FILE_PREFIX = "JPEG_";
-    public static final String FILE_EXTENSION = ".jpg";
+
     private String mCurrentPhotoPath;
 
     private final GetUser mGetUser;
@@ -153,19 +151,9 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     }
     @Override
     public File createImageFile() {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat(FILE_DATE_TEMPLATE).format(new Date());
-        String imageFileName = FILE_PREFIX + timeStamp + SEPARATOR;
-
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = null;
         try {
-            image = File.createTempFile(
-                    imageFileName,  /* prefix */
-                    FILE_EXTENSION,         /* suffix */
-                    storageDir      /* directory */
-            );
-
+            image = PictureManager.getInstance().createTempFile();
             mCurrentPhotoPath = image.getAbsolutePath();
             mThumbnail = image.getName();
         } catch (IOException e) {
@@ -176,66 +164,17 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     }
 
     @Override
-    public Bitmap createImageBitmap(ImageView mImageView) {
-        // Get the dimensions of the View
-        int targetW = mImageView.getWidth();
-        int targetH = mImageView.getHeight();
+    public void addImageBitmapToView(int width, int height) {
 
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
+        Bitmap bitmap = PictureManager.getInstance().getBitmap(mCurrentPhotoPath,width,height);
 
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-
-        return bitmap;
+        mRegisterView.showImageBitmap(bitmap);
     }
 
     @Override
     public void addPictureToGallery() {
-            rotateImage(mCurrentPhotoPath);
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            File f = new File(mCurrentPhotoPath);
-            Uri contentUri = Uri.fromFile(f);
-            mediaScanIntent.setData(contentUri);
-            mRegisterView.sendBroadcast(mediaScanIntent);
+           PictureManager.getInstance().addPictureToGallery(mCurrentPhotoPath,mRegisterView);
 
     }
-
-    private void rotateImage(String mCurrentPhotoPath) {
-        String photopath = mCurrentPhotoPath;
-        Bitmap bmp = BitmapFactory.decodeFile(photopath);
-
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
-        bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-
-        FileOutputStream fOut;
-        try {
-            fOut = new FileOutputStream(mCurrentPhotoPath);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-            fOut.flush();
-            fOut.close();
-
-        } catch (FileNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-
 
 }

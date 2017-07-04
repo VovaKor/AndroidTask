@@ -40,9 +40,9 @@
                 style="@style/RoundedButton"
                 android:text="@string/btn_data"
                 />
-            <Button android:id="@+id/btnAddPlace"
+            <Button android:id="@+id/btnPlaceList"
                 style="@style/RoundedButton"
-                android:text="@string/btn_add_place"
+                android:text="@string/btn_show_places"
                 />
             <Button
                 android:id="@+id/btnUserCancel"

@@ -37,11 +37,6 @@ public class AdminFragment extends Fragment implements AdminContract.View {
 
 
     private AdminContract.Presenter mPresenter;
-
-   // private UsersAdapter ;
-
-  //  private LinearLayout mUsersView;
-
     private RecyclerView mRecyclerView;
     private UsersAdapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -84,11 +79,6 @@ public class AdminFragment extends Fragment implements AdminContract.View {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.user_frag, container, false);
 
-//        // Set up users view
-//        ListView listView = (ListView) root.findViewById(R.id.users_list);
-//        listView.setAdapter(mListAdapter);
-
-       // mUsersView = (LinearLayout) root.findViewById(R.id.users_LL);
         mRecyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -100,7 +90,6 @@ public class AdminFragment extends Fragment implements AdminContract.View {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-       // mAdapter = new MyAdapter(myDataset);
         mRecyclerView.setAdapter(mListAdapter);
 
         // Set up floating action button

@@ -1,4 +1,4 @@
-package com.favoriteplaces.user;
+package com.favoriteplaces.user.actions;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.favoriteplaces.R;
 import com.favoriteplaces.user.data.UserDataActivity;
-import com.favoriteplaces.user.places.AddFavoritePlaceActivity;
+import com.favoriteplaces.user.places.placeslist.FPListActivity;
 import com.favoriteplaces.utils.SessionManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -47,11 +47,11 @@ public class UserActionsActivity extends Activity implements UserActionsContract
                 mPresenter.cancel();
             }
         });
-        Button addPlaceB = (Button) findViewById(R.id.btnAddPlace);
+        Button addPlaceB = (Button) findViewById(R.id.btnPlaceList);
         addPlaceB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.openAddPlaceActivity();
+                mPresenter.openPlaceListActivity();
             }
         });
     }
@@ -77,8 +77,8 @@ public class UserActionsActivity extends Activity implements UserActionsContract
     }
 
     @Override
-    public void showAddPlaceUI(String mUserId) {
-        Intent intent = new Intent(getApplicationContext(), AddFavoritePlaceActivity.class);
+    public void showPlaceListUI(String mUserId) {
+        Intent intent = new Intent(getApplicationContext(), FPListActivity.class);
         intent.putExtra(getString(R.string.EXTRA_USER_ID), mUserId);
         startActivity(intent);
     }

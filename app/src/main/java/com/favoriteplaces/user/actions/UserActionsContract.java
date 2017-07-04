@@ -1,4 +1,4 @@
-package com.favoriteplaces.user;
+package com.favoriteplaces.user.actions;
 
 import com.favoriteplaces.BasePresenter;
 import com.favoriteplaces.BaseView;
@@ -16,7 +16,7 @@ public interface UserActionsContract {
 
         void showActivity(Class activityClass);
 
-        void showAddPlaceUI(String mUserId);
+        void showPlaceListUI(String mUserId);
     }
 
     interface Presenter extends BasePresenter {
@@ -25,6 +25,6 @@ public interface UserActionsContract {
 
         void cancel();
 
-        void openAddPlaceActivity();
+        void openPlaceListActivity();
     }
 }

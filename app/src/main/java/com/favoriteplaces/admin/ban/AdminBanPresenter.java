@@ -1,4 +1,4 @@
-package com.favoriteplaces.admin.actions.ban;
+package com.favoriteplaces.admin.ban;
 
 
 import android.text.TextUtils;
